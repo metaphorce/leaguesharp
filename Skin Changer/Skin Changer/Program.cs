@@ -1,3 +1,5 @@
+//All Credits to Trelli for 100% of the code
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +25,7 @@ namespace Skin_Changer
         {
             Game.PrintChat(
             string.Format(
-                "{0} v{1} by trelli loaded. Press 9 to cycle your skin.",
+                "{0} v{1} Skin Changer - Parable of the cheap man by MetaPhorce.",
                 Assembly.GetExecutingAssembly().GetName().Name,
                 Assembly.GetExecutingAssembly().GetName().Version
             ));
