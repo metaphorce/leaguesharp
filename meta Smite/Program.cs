@@ -54,7 +54,7 @@ namespace meta_Smite
                     {
                         smiteReady = true;
                     }
-                    if (champSpell.IsReady() && Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
                     {
                         spellReady = true;
                     }
@@ -62,21 +62,22 @@ namespace meta_Smite
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
                         Game.PrintChat("Heath is below needed just smite");
-                        ObjectManager.Player.Spellbook.CastSpell(smiteSlot, mob);
                         ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
                     }
 
-                    if (spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
+                    if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
                     {
                         if (smiteReady)
                         {
                             if (mob.Health < smitedamage + ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Smite is ready and combined damage will kill
                             {
-                                champSpell.CastOnUnit(mob);
+                                Game.PrintChat("Killing With Combo");
+                                ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
                             }
                             else if (mob.Health < ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Killable with spell
                             {
-                                champSpell.CastOnUnit(mob);
+                                Game.PrintChat("Killing With Spell");
+                                ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
                             }
                         }
                     }
