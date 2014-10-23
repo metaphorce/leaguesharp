@@ -36,6 +36,7 @@ namespace meta_Smite
             Config.AddItem(new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
+            setupCampMenu();
             Game.OnGameUpdate += Game_OnGameUpdate;
             Game.PrintChat("Meta Smite by metaphorce Loaded");
         }
@@ -45,9 +46,12 @@ namespace meta_Smite
             if (Config.Item("Enabled").GetValue<KeyBind>().Active)
             {
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                if (mob != null)
+                Game.PrintChat("Mob is: " + mob.SkinName);
+                if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
+                    Game.PrintChat("Camp is Enabled");
                     double smitedamage = smiteDamage();
+                    double spelldamage = spellDamage(mob);
                     bool smiteReady = false;
                     bool spellReady = false;
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
@@ -68,11 +72,34 @@ namespace meta_Smite
                     {
                         if (smiteReady)
                         {
-                            if (mob.Health < smitedamage + ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Smite is ready and combined damage will kill
+                            if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
-                                ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
+                                Game.PrintChat("Should be using spell");
+                                if(ObjectManager.Player.ChampionName == "Lux")
+                                {
+                                    champSpell.Cast(mob.ServerPosition);
+                                }
+                                if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus")
+                                {
+                                    champSpell.Cast();
+                                }
+                                else
+                                {
+                                    ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
+                                }
                             }
-                            else if (mob.Health < ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Killable with spell
+                        }
+                        else if (mob.Health < spelldamage) //Killable with spell
+                        {
+                            if (ObjectManager.Player.ChampionName == "Lux")
+                            {
+                                champSpell.Cast(mob.ServerPosition);
+                            }
+                            if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus")
+                            {
+                                champSpell.Cast();
+                            }
+                            else
                             {
                                 ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
                             }
@@ -122,6 +149,74 @@ namespace meta_Smite
                 50*level + 100
             };
             return damage.Max();
+        }
+
+        public static double spellDamage(Obj_AI_Base mob)
+        {
+            double result = 0;
+            Obj_AI_Hero hero = ObjectManager.Player;
+            if(hero.ChampionName == "Nunu")
+            {
+                return (250 + (150 * hero.Spellbook.GetSpell(champSpell.Slot).Level));
+            }
+            if (hero.ChampionName == "Chogath")
+            {
+                return (1000 + (hero.FlatMagicDamageMod * 0.7));
+            }
+            if (hero.ChampionName == "Elise")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Lux")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot) - 100);
+            }
+            if (hero.ChampionName == "Volibear")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Warwick")
+            {
+                return (25 + (50 * hero.Spellbook.GetSpell(champSpell.Slot).Level));
+            }
+            if (hero.ChampionName == "Olaf")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Twitch")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Shaco")
+            {
+                return (10 + (40 * hero.Spellbook.GetSpell(champSpell.Slot).Level));
+            }
+            if (hero.ChampionName == "Vi")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Pantheon")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "MasterYi")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "MonkeyKing")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "KhaZix")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+            if (hero.ChampionName == "Rammus")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
+
+            return result;
         }
 
         public static Spell addSupportedChampSkill()
@@ -180,6 +275,25 @@ namespace meta_Smite
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
+        }
+
+        public static void setupCampMenu()
+        {
+            Config.AddSubMenu(new Menu("Camps", "Camps"));
+            if(Game.MapId == GameMapId.SummonersRift)
+            {
+                Config.SubMenu("Camps").AddItem(new MenuItem("Worm", "Baron Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("Dragon", "Dragon Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("AncientGolem", "Blue Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("LizardElder", "Red Enabled").SetValue(true));
+            }
+            if(Game.MapId == GameMapId.TwistedTreeline)
+            {
+                Config.SubMenu("Camps").AddItem(new MenuItem("TT_Spiderboss", "Vilemaw Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("TT_NGolem", "Golem Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
+            }
         }
 
         //Credits to Lizzaran
