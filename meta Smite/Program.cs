@@ -46,10 +46,8 @@ namespace meta_Smite
             if (Config.Item("Enabled").GetValue<KeyBind>().Active)
             {
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                Game.PrintChat("Mob is: " + mob.SkinName);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
-                    Game.PrintChat("Camp is Enabled");
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
                     bool smiteReady = false;
@@ -74,7 +72,6 @@ namespace meta_Smite
                         {
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
-                                Game.PrintChat("Should be using spell");
                                 if(ObjectManager.Player.ChampionName == "Lux")
                                 {
                                     champSpell.Cast(mob.ServerPosition);
