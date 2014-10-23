@@ -33,6 +33,7 @@ namespace meta_Smite
                 return;
             }
             Config = new Menu("metaSmite", "metaSmite", true);
+            Config.AddItem(new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -41,39 +42,42 @@ namespace meta_Smite
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
-            Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-            if(mob != null)
+            if (Config.Item("Enabled").GetValue<KeyBind>().Active)
             {
-                double smitedamage = smiteDamage();
-                bool smiteReady = false;
-                bool spellReady = false;
-                if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
+                Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
+                if (mob != null)
                 {
-                    smiteReady = true;
-                }
-                if (champSpell.IsReady() && Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
-                {
-                    spellReady = true;
-                }
-
-                if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
-                {
-                    Game.PrintChat("Heath is below needed just smite");
-                    ObjectManager.Player.Spellbook.CastSpell(smiteSlot, mob);
-                    ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
-                }
-
-                if (spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
-                {
-                    if (smiteReady)
+                    double smitedamage = smiteDamage();
+                    bool smiteReady = false;
+                    bool spellReady = false;
+                    if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
-                        if (mob.Health < smitedamage + adjustDamage(ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot))) //Smite is ready and combined damage will kill
+                        smiteReady = true;
+                    }
+                    if (champSpell.IsReady() && Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    {
+                        spellReady = true;
+                    }
+
+                    if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
+                    {
+                        Game.PrintChat("Heath is below needed just smite");
+                        ObjectManager.Player.Spellbook.CastSpell(smiteSlot, mob);
+                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                    }
+
+                    if (spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
+                    {
+                        if (smiteReady)
                         {
-                            champSpell.CastOnUnit(mob);
-                        }
-                        else if (mob.Health < adjustDamage(ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot))) //Killable with spell
-                        {
-                            champSpell.CastOnUnit(mob);
+                            if (mob.Health < smitedamage + ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Smite is ready and combined damage will kill
+                            {
+                                champSpell.CastOnUnit(mob);
+                            }
+                            else if (mob.Health < ObjectManager.Player.GetSpellDamage(mob, champSpell.Slot)) //Killable with spell
+                            {
+                                champSpell.CastOnUnit(mob);
+                            }
                         }
                     }
                 }
@@ -91,23 +95,23 @@ namespace meta_Smite
             }
         }
 
-        public static double adjustDamage(double damage)
-        {
-            double result = damage;
-            if (Items.HasItem(1080)) //Spirit Stone
-            {
-                result = damage + (damage * 0.2);
-            }
-            if (Items.HasItem(3209)) //Spirit of the Elder Lizard
-            {
-                result = damage + (damage * 0.2);
-            }
-            if (Items.HasItem(3206)) //Spirit of the Spectral Wraith
-            {
-                result = damage + (damage * 0.3);
-            }
-            return result;
-        }
+        //public static double adjustDamage(double damage)
+        //{
+        //    double result = damage;
+        //    if (Items.HasItem(1080)) //Spirit Stone
+        //    {
+        //        result = damage + (damage * 0.2);
+        //    }
+        //    if (Items.HasItem(3209)) //Spirit of the Elder Lizard
+        //    {
+        //        result = damage + (damage * 0.2);
+        //    }
+        //    if (Items.HasItem(3206)) //Spirit of the Spectral Wraith
+        //    {
+        //        result = damage + (damage * 0.3);
+        //    }
+        //    return result;
+        //}
 
         public static double smiteDamage()
         {
@@ -148,8 +152,7 @@ namespace meta_Smite
                 spellList.TryGetValue(champ, out slot);
                 Spell comboSpell = new Spell(slot, 0);
                 comboSpell.Range = getRange(champ);
-                Config.AddSubMenu(new Menu("SupportedSpell", "SupportedSpell"));
-                Config.SubMenu("SupportedSpell").AddItem(new MenuItem("Enabled-" + champ, "Enabled-" + champ + "-" + slot)).SetValue(true);
+                Config.AddItem(new MenuItem("Enabled-" + champ, "Enabled-" + champ + "-" + slot)).SetValue(true);
                 return comboSpell;
             }
             else
