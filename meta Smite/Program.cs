@@ -80,7 +80,11 @@ namespace meta_Smite
                                 {
                                     champSpell.Cast(mob.ServerPosition);
                                 }
-                                if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus" || ObjectManager.Player.ChampionName == "Rengar")
+                                if (ObjectManager.Player.ChampionName == "Twitch" || 
+                                    ObjectManager.Player.ChampionName == "MonkeyKing" || 
+                                    ObjectManager.Player.ChampionName == "Rammus" || 
+                                    ObjectManager.Player.ChampionName == "Rengar" ||
+                                    ObjectManager.Player.ChampionName == "Nasus")
                                 {
                                     champSpell.Cast();
                                 }
@@ -220,6 +224,10 @@ namespace meta_Smite
             {
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
+            if (hero.ChampionName == "Nasus")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
 
             return result;
         }
@@ -243,6 +251,7 @@ namespace meta_Smite
             spellList.Add("Khazix", SpellSlot.Q);
             spellList.Add("Rammus", SpellSlot.Q);
             spellList.Add("Rengar", SpellSlot.Q);
+            spellList.Add("Nasus", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -279,6 +288,7 @@ namespace meta_Smite
             rangeList.Add("Khazix", 325f);
             rangeList.Add("Rammus", 100f);
             rangeList.Add("Rengar", ObjectManager.Player.AttackRange);
+            rangeList.Add("Nasus", ObjectManager.Player.AttackRange);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
