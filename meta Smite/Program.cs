@@ -50,6 +50,10 @@ namespace meta_Smite
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
+                    //Game.PrintChat("Spell damage is: " + spelldamage);
+                    //Game.PrintChat("Total damage is: " + (spelldamage + smitedamage));
+                    //Game.PrintChat("AA damage is: " + (ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage));
+                    //Game.PrintChat("EAA damage is: " + (ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage + spelldamage));
                     bool smiteReady = false;
                     bool spellReady = false;
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
@@ -76,7 +80,7 @@ namespace meta_Smite
                                 {
                                     champSpell.Cast(mob.ServerPosition);
                                 }
-                                if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus")
+                                if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus" || ObjectManager.Player.ChampionName == "Rengar")
                                 {
                                     champSpell.Cast();
                                 }
@@ -212,6 +216,10 @@ namespace meta_Smite
             {
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
+            if (hero.ChampionName == "Rengar")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
 
             return result;
         }
@@ -234,6 +242,7 @@ namespace meta_Smite
             spellList.Add("MonkeyKing", SpellSlot.Q);
             spellList.Add("Khazix", SpellSlot.Q);
             spellList.Add("Rammus", SpellSlot.Q);
+            spellList.Add("Rengar", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -269,6 +278,7 @@ namespace meta_Smite
             rangeList.Add("MonkeyKing", 100f);
             rangeList.Add("Khazix", 325f);
             rangeList.Add("Rammus", 100f);
+            rangeList.Add("Rengar", ObjectManager.Player.AttackRange);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
