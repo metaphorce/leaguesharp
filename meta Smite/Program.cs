@@ -96,11 +96,15 @@ namespace meta_Smite
                         }
                         else if (mob.Health < spelldamage) //Killable with spell
                         {
-                            if (ObjectManager.Player.ChampionName == "Lux")
+                            if (ObjectManager.Player.ChampionName == "Lux" || ObjectManager.Player.ChampionName == "Xerath")
                             {
                                 champSpell.Cast(mob.ServerPosition);
                             }
-                            if (ObjectManager.Player.ChampionName == "Twitch" || ObjectManager.Player.ChampionName == "MonkeyKing" || ObjectManager.Player.ChampionName == "Rammus")
+                            if (ObjectManager.Player.ChampionName == "Twitch" ||
+                                ObjectManager.Player.ChampionName == "MonkeyKing" ||
+                                ObjectManager.Player.ChampionName == "Rammus" ||
+                                ObjectManager.Player.ChampionName == "Rengar" ||
+                                ObjectManager.Player.ChampionName == "Nasus")
                             {
                                 champSpell.Cast();
                             }
@@ -228,6 +232,11 @@ namespace meta_Smite
             {
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
+            if (hero.ChampionName == "Xerath")
+            {
+                champSpell.Range = 2000 + champSpell.Level * 1200;//Update R range
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
 
             return result;
         }
@@ -252,6 +261,7 @@ namespace meta_Smite
             spellList.Add("Rammus", SpellSlot.Q);
             spellList.Add("Rengar", SpellSlot.Q);
             spellList.Add("Nasus", SpellSlot.Q);
+            spellList.Add("Xerath", SpellSlot.R);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -289,6 +299,7 @@ namespace meta_Smite
             rangeList.Add("Rammus", 100f);
             rangeList.Add("Rengar", ObjectManager.Player.AttackRange);
             rangeList.Add("Nasus", ObjectManager.Player.AttackRange);
+            rangeList.Add("Xerath", 3200f);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
