@@ -50,10 +50,6 @@ namespace meta_Smite
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
-                    //Game.PrintChat("Spell damage is: " + spelldamage);
-                    //Game.PrintChat("Total damage is: " + (spelldamage + smitedamage));
-                    //Game.PrintChat("AA damage is: " + (ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage));
-                    //Game.PrintChat("EAA damage is: " + (ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage + spelldamage));
                     bool smiteReady = false;
                     bool spellReady = false;
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
@@ -80,12 +76,17 @@ namespace meta_Smite
                                 {
                                     champSpell.Cast(mob.ServerPosition);
                                 }
-                                if (ObjectManager.Player.ChampionName == "Twitch" || 
-                                    ObjectManager.Player.ChampionName == "MonkeyKing" || 
-                                    ObjectManager.Player.ChampionName == "Rammus" || 
+                                if (ObjectManager.Player.ChampionName == "Twitch" ||
+                                    ObjectManager.Player.ChampionName == "MonkeyKing" ||
+                                    ObjectManager.Player.ChampionName == "Rammus" ||
                                     ObjectManager.Player.ChampionName == "Rengar" ||
-                                    ObjectManager.Player.ChampionName == "Nasus")
+                                    ObjectManager.Player.ChampionName == "Nasus" ||
+                                    ObjectManager.Player.ChampionName == "LeeSin")
                                 {
+                                    if (ObjectManager.Player.ChampionName == "LeeSin" && !mob.HasBuff("BlindMonkQOne", true))
+                                    {
+                                        return;
+                                    }
                                     champSpell.Cast();
                                 }
                                 else
@@ -104,8 +105,13 @@ namespace meta_Smite
                                 ObjectManager.Player.ChampionName == "MonkeyKing" ||
                                 ObjectManager.Player.ChampionName == "Rammus" ||
                                 ObjectManager.Player.ChampionName == "Rengar" ||
-                                ObjectManager.Player.ChampionName == "Nasus")
+                                ObjectManager.Player.ChampionName == "Nasus" ||
+                                ObjectManager.Player.ChampionName == "LeeSin")
                             {
+                                if (ObjectManager.Player.ChampionName == "LeeSin" && !mob.HasBuff("BlindMonkQOne", true))
+                                {
+                                    return;
+                                }
                                 champSpell.Cast();
                             }
                             else
@@ -128,24 +134,6 @@ namespace meta_Smite
                 return;
             }
         }
-
-        //public static double adjustDamage(double damage)
-        //{
-        //    double result = damage;
-        //    if (Items.HasItem(1080)) //Spirit Stone
-        //    {
-        //        result = damage + (damage * 0.2);
-        //    }
-        //    if (Items.HasItem(3209)) //Spirit of the Elder Lizard
-        //    {
-        //        result = damage + (damage * 0.2);
-        //    }
-        //    if (Items.HasItem(3206)) //Spirit of the Spectral Wraith
-        //    {
-        //        result = damage + (damage * 0.3);
-        //    }
-        //    return result;
-        //}
 
         public static double smiteDamage()
         {
@@ -237,7 +225,10 @@ namespace meta_Smite
                 champSpell.Range = 2000 + champSpell.Level * 1200;//Update R range
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
-
+            if (hero.ChampionName == "LeeSin")
+            {
+                return (getQ2Dmg(mob));
+            }
             return result;
         }
 
@@ -322,6 +313,17 @@ namespace meta_Smite
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
             }
+        }
+
+        public static double getQ2Dmg(Obj_AI_Base target)
+        {
+            Int32[] dmgQ = { 50, 80, 110, 140, 170 };
+            double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Physical, dmgQ[champSpell.Level - 1] + 0.9 * ObjectManager.Player.FlatPhysicalDamageMod + 0.08 * (target.MaxHealth - target.Health));
+            if(damage > 400)
+            {
+                return 400;
+            }
+            return damage;
         }
 
         //Credits to Lizzaran
