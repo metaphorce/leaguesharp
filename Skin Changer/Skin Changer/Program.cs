@@ -79,7 +79,7 @@ namespace Skin_Changer
             numSkins.Add("Kennen", 5);
             numSkins.Add("Khazix", 3);
             numSkins.Add("KogMaw", 7);
-            numSkins.Add("Leblanc", 3);
+            numSkins.Add("Leblanc", 4);
             numSkins.Add("LeeSin", 6);
             numSkins.Add("Leona", 4);
             numSkins.Add("Lissandra", 2);
@@ -92,7 +92,7 @@ namespace Skin_Changer
             numSkins.Add("Masteryi", 5);
             numSkins.Add("MasterYi", 5);
             numSkins.Add("MissFortune", 7);
-            numSkins.Add("MonkeyKing", 3);
+            numSkins.Add("MonkeyKing", 4);
             numSkins.Add("Mordekaiser", 4);
             numSkins.Add("Morgana", 5);
             numSkins.Add("Nami", 2);
