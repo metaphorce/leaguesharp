@@ -33,7 +33,8 @@ namespace meta_Smite
                 return;
             }
             Config = new Menu("metaSmite", "metaSmite", true);
-            Config.AddItem(new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
+            Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
+            Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
@@ -43,7 +44,7 @@ namespace meta_Smite
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
-            if (Config.Item("Enabled").GetValue<KeyBind>().Active)
+            if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
@@ -52,6 +53,14 @@ namespace meta_Smite
                     double spelldamage = spellDamage(mob);
                     bool smiteReady = false;
                     bool spellReady = false;
+
+                    //Game.PrintChat("Total damage is: " + (smitedamage + spelldamage));
+
+                    //foreach (var buff in mob.Buffs)
+                    //{
+                    //    Game.PrintChat("Buff is: " + buff.DisplayName);
+                    //}
+
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
                         smiteReady = true;
@@ -83,12 +92,21 @@ namespace meta_Smite
                                     ObjectManager.Player.ChampionName == "Nasus" ||
                                     ObjectManager.Player.ChampionName == "LeeSin")
                                 {
-                                    if (ObjectManager.Player.ChampionName == "LeeSin" && !mob.HasBuff("BlindMonkQOne", true))
+                                    if (ObjectManager.Player.ChampionName == "LeeSin")
                                     {
-                                        return;
+                                        if (!mob.HasBuff("BlindMonkSonicWave"))
+                                        {
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            Game.PrintChat("Should be casting spell");
+                                            champSpell.Cast();
+                                        }
                                     }
-                                    champSpell.Cast();
-                                }
+                                    Game.PrintChat("Passed checks");
+                                    champSpell.CastOnUnit(ObjectManager.Player); 
+                                } 
                                 else
                                 {
                                     ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
@@ -108,11 +126,19 @@ namespace meta_Smite
                                 ObjectManager.Player.ChampionName == "Nasus" ||
                                 ObjectManager.Player.ChampionName == "LeeSin")
                             {
-                                if (ObjectManager.Player.ChampionName == "LeeSin" && !mob.HasBuff("BlindMonkQOne", true))
+                                if (ObjectManager.Player.ChampionName == "LeeSin")
                                 {
-                                    return;
+                                    if (!mob.HasBuff("BlindMonkSonicWave", true))
+                                    {
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        champSpell.CastOnUnit(mob);
+                                    }
                                 }
-                                champSpell.Cast();
+                                Game.PrintChat("Passed checks");
+                                champSpell.CastOnUnit(ObjectManager.Player); 
                             }
                             else
                             {
@@ -253,6 +279,7 @@ namespace meta_Smite
             spellList.Add("Rengar", SpellSlot.Q);
             spellList.Add("Nasus", SpellSlot.Q);
             spellList.Add("Xerath", SpellSlot.R);
+            spellList.Add("LeeSin", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -291,6 +318,7 @@ namespace meta_Smite
             rangeList.Add("Rengar", ObjectManager.Player.AttackRange);
             rangeList.Add("Nasus", ObjectManager.Player.AttackRange);
             rangeList.Add("Xerath", 3200f);
+            rangeList.Add("LeeSin", 1300f);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
