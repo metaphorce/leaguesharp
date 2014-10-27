@@ -18,6 +18,7 @@ namespace meta_Smite
         public static SpellSlot smiteSlot = SpellSlot.Unknown;
         public static Spell smite;
         public static Spell champSpell;
+        public static bool hasSpell = false;
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameStart;
@@ -54,25 +55,21 @@ namespace meta_Smite
                     bool smiteReady = false;
                     bool spellReady = false;
 
-                    //Game.PrintChat("Total damage is: " + (smitedamage + spelldamage));
-
-                    //foreach (var buff in mob.Buffs)
-                    //{
-                    //    Game.PrintChat("Buff is: " + buff.DisplayName);
-                    //}
-
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
                         smiteReady = true;
-                    }
-                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
-                    {
-                        spellReady = true;
                     }
 
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
                         ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                    }
+
+                    if (!hasSpell) { return; }
+
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    {
+                        spellReady = true;
                     }
 
                     if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
@@ -104,8 +101,10 @@ namespace meta_Smite
                                             champSpell.Cast();
                                         }
                                     }
-                                    Game.PrintChat("Passed checks");
-                                    champSpell.CastOnUnit(ObjectManager.Player); 
+                                    else
+                                    {
+                                        champSpell.CastOnUnit(ObjectManager.Player); 
+                                    }
                                 } 
                                 else
                                 {
@@ -128,17 +127,20 @@ namespace meta_Smite
                             {
                                 if (ObjectManager.Player.ChampionName == "LeeSin")
                                 {
-                                    if (!mob.HasBuff("BlindMonkSonicWave", true))
+                                    if (!mob.HasBuff("BlindMonkSonicWave"))
                                     {
                                         return;
                                     }
                                     else
                                     {
-                                        champSpell.CastOnUnit(mob);
+                                        Game.PrintChat("Should be casting spell");
+                                        champSpell.Cast();
                                     }
                                 }
-                                Game.PrintChat("Passed checks");
-                                champSpell.CastOnUnit(ObjectManager.Player); 
+                                else
+                                {
+                                    champSpell.CastOnUnit(ObjectManager.Player);
+                                }
                             }
                             else
                             {
@@ -289,6 +291,7 @@ namespace meta_Smite
                 Spell comboSpell = new Spell(slot, 0);
                 comboSpell.Range = getRange(champ);
                 Config.AddItem(new MenuItem("Enabled-" + champ, "Enabled-" + champ + "-" + slot)).SetValue(true);
+                hasSpell = true;
                 return comboSpell;
             }
             else
