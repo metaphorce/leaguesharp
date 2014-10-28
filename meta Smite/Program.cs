@@ -36,6 +36,7 @@ namespace meta_Smite
             Config = new Menu("metaSmite", "metaSmite", true);
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
+            Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
@@ -62,6 +63,23 @@ namespace meta_Smite
 
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
+                        if (Config.Item("SmiteCast").GetValue<bool>())
+                        {
+                            var pslot = 0;
+                            if(smite.Slot == SpellSlot.Q)
+                            {
+                                pslot = 64; //Credits to Lizzaren and Trees
+                            }
+                            if(smite.Slot == SpellSlot.W)
+                            {
+                                pslot = 65; //Credits to Lizzaren and Trees
+                            }
+
+                            if(pslot != 0)
+                            {
+                                Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send();
+                            }
+                        }
                         ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
                     }
 
@@ -154,8 +172,7 @@ namespace meta_Smite
 
         public static void setSmiteSlot()
         {
-            var spells = ObjectManager.Player.SummonerSpellbook.Spells;
-            foreach (var spell in spells.Where(spell => spell.Name.ToLower() == "summonersmite"))
+            foreach (var spell in ObjectManager.Player.SummonerSpellbook.Spells.Where(spell => String.Equals(spell.Name, "SummonerSmite", StringComparison.CurrentCultureIgnoreCase)))
             {
                 smiteSlot = spell.Slot;
                 smite = new Spell(smiteSlot, 700);
