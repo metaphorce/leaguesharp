@@ -257,6 +257,10 @@ namespace meta_Smite
             {
                 return (getQ2Dmg(mob));
             }
+            if (hero.ChampionName == "Veigar")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
             return result;
         }
 
@@ -282,6 +286,7 @@ namespace meta_Smite
             spellList.Add("Nasus", SpellSlot.Q);
             spellList.Add("Xerath", SpellSlot.R);
             spellList.Add("LeeSin", SpellSlot.Q);
+            spellList.Add("Veigar", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -322,6 +327,7 @@ namespace meta_Smite
             rangeList.Add("Nasus", ObjectManager.Player.AttackRange);
             rangeList.Add("Xerath", 3200f);
             rangeList.Add("LeeSin", 1300f);
+            rangeList.Add("Veigar", 650f);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
