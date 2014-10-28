@@ -80,7 +80,10 @@ namespace meta_Smite
                                 Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send();
                             }
                         }
-                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                        else
+                        {
+                            ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                        }
                     }
 
                     if (!hasSpell) { return; }
