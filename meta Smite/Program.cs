@@ -174,7 +174,7 @@ namespace meta_Smite
         }
         private static void OnDraw(EventArgs args)
         {
-         Utility.DrawCircle(mob.Position, 300, Color.FromArgb(128, 128, 0, 128));
+         Utility.DrawCircle(mob.Position, 300, Color.Aquamarine);
         }
         public static void setSmiteSlot()
         {
