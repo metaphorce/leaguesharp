@@ -36,7 +36,7 @@ namespace meta_Smite
             Config = new Menu("metaSmite", "metaSmite", true);
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
-            Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
+            //Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
@@ -48,13 +48,13 @@ namespace meta_Smite
         {
             if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
+                bool smiteReady = false;
+                bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
-                    bool smiteReady = false;
-                    bool spellReady = false;
 
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
@@ -63,8 +63,9 @@ namespace meta_Smite
 
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
-                        if (Config.Item("SmiteCast").GetValue<bool>())
+                        if (false) //Config.Item("SmiteCast").GetValue<bool>())
                         {
+                            Game.PrintChat("Casting with packets, slot is: " + smite.Slot);
                             var pslot = 0;
                             if(smite.Slot == SpellSlot.Q)
                             {
@@ -77,7 +78,8 @@ namespace meta_Smite
 
                             if(pslot != 0)
                             {
-                                Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send();
+                                Game.PrintChat("Casting smite");
+                                Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send(PacketChannel.C2S);
                             }
                         }
                         else
@@ -86,7 +88,10 @@ namespace meta_Smite
                         }
                     }
 
-                    if (!hasSpell) { return; }
+                    if (!hasSpell) 
+                    {
+                        return; 
+                    }
 
                     if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
                     {
@@ -97,6 +102,7 @@ namespace meta_Smite
                     {
                         if (smiteReady)
                         {
+                            //Game.PrintChat("Mob health is: " + mob.Health + ", damage is: " + (smitedamage + spelldamage));
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
                                 if(ObjectManager.Player.ChampionName == "Lux")
@@ -108,7 +114,8 @@ namespace meta_Smite
                                     ObjectManager.Player.ChampionName == "Rammus" ||
                                     ObjectManager.Player.ChampionName == "Rengar" ||
                                     ObjectManager.Player.ChampionName == "Nasus" ||
-                                    ObjectManager.Player.ChampionName == "LeeSin")
+                                    ObjectManager.Player.ChampionName == "LeeSin" ||
+                                    ObjectManager.Player.ChampionName == "Udyr")
                                 {
                                     if (ObjectManager.Player.ChampionName == "LeeSin")
                                     {
@@ -116,16 +123,8 @@ namespace meta_Smite
                                         {
                                             return;
                                         }
-                                        else
-                                        {
-                                            Game.PrintChat("Should be casting spell");
-                                            champSpell.Cast();
-                                        }
                                     }
-                                    else
-                                    {
-                                        champSpell.CastOnUnit(ObjectManager.Player); 
-                                    }
+                                    champSpell.Cast();
                                 } 
                                 else
                                 {
@@ -144,7 +143,8 @@ namespace meta_Smite
                                 ObjectManager.Player.ChampionName == "Rammus" ||
                                 ObjectManager.Player.ChampionName == "Rengar" ||
                                 ObjectManager.Player.ChampionName == "Nasus" ||
-                                ObjectManager.Player.ChampionName == "LeeSin")
+                                ObjectManager.Player.ChampionName == "LeeSin" ||
+                                ObjectManager.Player.ChampionName == "Udyr")
                             {
                                 if (ObjectManager.Player.ChampionName == "LeeSin")
                                 {
@@ -154,7 +154,6 @@ namespace meta_Smite
                                     }
                                     else
                                     {
-                                        Game.PrintChat("Should be casting spell");
                                         champSpell.Cast();
                                     }
                                 }
@@ -281,6 +280,10 @@ namespace meta_Smite
             {
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
+            if (hero.ChampionName == "Udyr")
+            {
+                return (getUdyrR(mob));
+            }
             return result;
         }
 
@@ -307,6 +310,7 @@ namespace meta_Smite
             spellList.Add("Xerath", SpellSlot.R);
             spellList.Add("LeeSin", SpellSlot.Q);
             spellList.Add("Veigar", SpellSlot.Q);
+            spellList.Add("Udyr", SpellSlot.R);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -348,6 +352,7 @@ namespace meta_Smite
             rangeList.Add("Xerath", 3200f);
             rangeList.Add("LeeSin", 1300f);
             rangeList.Add("Veigar", 650f);
+            rangeList.Add("Udyr", ObjectManager.Player.AttackRange);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
@@ -380,6 +385,13 @@ namespace meta_Smite
             {
                 return 400;
             }
+            return damage;
+        }
+
+        public static double getUdyrR(Obj_AI_Base target)
+        {
+            Int32[] dmgQ = { 40, 80, 120, 160, 200 };
+            double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Magical, dmgQ[champSpell.Level - 1] + 0.45 * ObjectManager.Player.FlatMagicDamageMod);
             return damage;
         }
 
