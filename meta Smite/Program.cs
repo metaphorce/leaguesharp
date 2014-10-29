@@ -7,6 +7,7 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System.Reflection;
 using SharpDX;
+using Color = System.Drawing.Color;
 
 namespace meta_Smite
 {
@@ -173,7 +174,7 @@ namespace meta_Smite
         }
         private static void OnDraw(EventArgs args)
         {
-         
+         Utility.DrawCircle(mob.Position, 300, Color.FromArgb(128, 128, 0, 128));
         }
         public static void setSmiteSlot()
         {
