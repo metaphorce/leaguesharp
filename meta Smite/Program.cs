@@ -171,7 +171,13 @@ namespace meta_Smite
                 }
             }
         }
-
+        private static void OnDraw(EventArgs args)
+        {
+          
+                    Utility.DrawCircle(mob.Position, 400, Color.FromArgb(128, 128, 0, 128));
+                
+            
+        }
         public static void setSmiteSlot()
         {
             foreach (var spell in ObjectManager.Player.SummonerSpellbook.Spells.Where(spell => String.Equals(spell.Name, "SummonerSmite", StringComparison.CurrentCultureIgnoreCase)))
