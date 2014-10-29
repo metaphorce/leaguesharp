@@ -174,6 +174,7 @@ namespace meta_Smite
         }
         private static void OnDraw(EventArgs args)
         {
+            Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
          Utility.DrawCircle(mob.Position, 300, Color.Aquamarine);
         }
         public static void setSmiteSlot()
