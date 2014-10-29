@@ -284,6 +284,10 @@ namespace meta_Smite
             {
                 return (getUdyrR(mob));
             }
+            if (hero.ChampionName == "Fizz")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
             return result;
         }
 
@@ -311,6 +315,7 @@ namespace meta_Smite
             spellList.Add("LeeSin", SpellSlot.Q);
             spellList.Add("Veigar", SpellSlot.Q);
             spellList.Add("Udyr", SpellSlot.R);
+            spellList.Add("Fizz", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -353,6 +358,7 @@ namespace meta_Smite
             rangeList.Add("LeeSin", 1300f);
             rangeList.Add("Veigar", 650f);
             rangeList.Add("Udyr", ObjectManager.Player.AttackRange);
+            rangeList.Add("Fizz", 550f);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
