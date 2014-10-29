@@ -171,7 +171,10 @@ namespace meta_Smite
                 }
             }
         }
-
+        private static void OnDraw(EventArgs args)
+        {
+         
+        }
         public static void setSmiteSlot()
         {
             foreach (var spell in ObjectManager.Player.SummonerSpellbook.Spells.Where(spell => String.Equals(spell.Name, "SummonerSmite", StringComparison.CurrentCultureIgnoreCase)))
