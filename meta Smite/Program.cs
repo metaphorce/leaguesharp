@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +7,8 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System.Reflection;
 using SharpDX;
+using Color = System.Drawing.Color;
+
 
 namespace meta_Smite
 {
@@ -18,7 +20,10 @@ namespace meta_Smite
         public static SpellSlot smiteSlot = SpellSlot.Unknown;
         public static Spell smite;
         public static Spell champSpell;
+        public static bool smiteReady = false;
+        public static bool spellReady = false;
         public static bool hasSpell = false;
+        public static Render.Text _textF = new Render.Text("", 0, 0, 24, SharpDX.Color.Goldenrod);
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameStart;
@@ -28,7 +33,7 @@ namespace meta_Smite
         {
             Game.PrintChat("Starting load of Meta Smite");
             setSmiteSlot();
-            if(smiteSlot == SpellSlot.Unknown)
+            if (smiteSlot == SpellSlot.Unknown)
             {
                 Game.PrintChat("Smite not found, disabling Meta Smite");
                 return;
@@ -41,6 +46,7 @@ namespace meta_Smite
             Config.AddToMainMenu();
             setupCampMenu();
             Game.OnGameUpdate += Game_OnGameUpdate;
+            Drawing.OnDraw += Drawing_OnDraw;
             Game.PrintChat("Meta Smite by metaphorce Loaded");
         }
 
@@ -48,35 +54,35 @@ namespace meta_Smite
         {
             if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
-                bool smiteReady = false;
-                bool spellReady = false;
+                
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
-
+                    smiteReady = false;
+                    spellReady = false;
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
                         smiteReady = true;
                     }
-
+                    
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
                         if (false) //Config.Item("SmiteCast").GetValue<bool>())
                         {
                             Game.PrintChat("Casting with packets, slot is: " + smite.Slot);
                             var pslot = 0;
-                            if(smite.Slot == SpellSlot.Q)
+                            if (smite.Slot == SpellSlot.Q)
                             {
                                 pslot = 64; //Credits to Lizzaren and Trees
                             }
-                            if(smite.Slot == SpellSlot.W)
+                            if (smite.Slot == SpellSlot.W)
                             {
                                 pslot = 65; //Credits to Lizzaren and Trees
                             }
 
-                            if(pslot != 0)
+                            if (pslot != 0)
                             {
                                 Game.PrintChat("Casting smite");
                                 Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send(PacketChannel.C2S);
@@ -88,16 +94,16 @@ namespace meta_Smite
                         }
                     }
 
-                    if (!hasSpell) 
+                    if (!hasSpell)
                     {
-                        return; 
+                        return;
                     }
 
                     if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
                     {
                         spellReady = true;
                     }
-
+ 
                     if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
                     {
                         if (smiteReady)
@@ -105,7 +111,7 @@ namespace meta_Smite
                             //Game.PrintChat("Mob health is: " + mob.Health + ", damage is: " + (smitedamage + spelldamage));
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
-                                if(ObjectManager.Player.ChampionName == "Lux")
+                                if (ObjectManager.Player.ChampionName == "Lux")
                                 {
                                     champSpell.Cast(mob.ServerPosition);
                                 }
@@ -125,7 +131,7 @@ namespace meta_Smite
                                         }
                                     }
                                     champSpell.Cast();
-                                } 
+                                }
                                 else
                                 {
                                     ObjectManager.Player.Spellbook.CastSpell(champSpell.Slot, mob);
@@ -172,6 +178,52 @@ namespace meta_Smite
             }
         }
 
+        public static void Drawing_OnDraw(EventArgs args)
+        {
+            Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
+            if (Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < 1500 && mob.IsVisible)
+            {
+            double smitedamage = smiteDamage();
+            double spelldamage = 0;
+            if (champSpell.IsReady() && spellReady)
+            {
+                spelldamage = spellDamage(mob);
+            }
+
+
+            double percentSmite = smitedamage / mob.Health * 100;
+            double percentSmiteSpell = (smitedamage + spelldamage) / mob.Health * 100;
+
+            double rcolor = 255 - 2.55 * percentSmite;
+            double gcolor = 0 + 2.55 * percentSmite;
+            double rcolor2 = 255 - 2.55 * percentSmiteSpell;
+            double gcolor2 = 0 + 2.55 * percentSmiteSpell;
+            if (percentSmite > 100)
+            {
+                rcolor = 0;
+                gcolor = 255;
+            }
+            if (percentSmiteSpell > 100)
+            {
+                rcolor2 = 0;
+                gcolor2 = 255;
+            }
+            
+                _textF.Centered = true;
+                _textF.text = "Smite Dmg Percentage             :  " + percentSmite.ToString("#.##") + "%" + "\r\nSmite + Spell Dmg Percentage :  " + percentSmiteSpell.ToString("#.##") + "%";
+                _textF.X = (int)Drawing.WorldToScreen(mob.Position).X;
+                _textF.Y = (int)Drawing.WorldToScreen(mob.Position).Y + 60;
+                _textF.OutLined = true;
+                _textF.OnEndScene();
+
+
+                Utility.DrawCircle(mob.Position, 250, Color.FromArgb(100, (int)rcolor, (int)gcolor, 0));
+                Utility.DrawCircle(mob.Position, 280, Color.FromArgb(100, (int)rcolor2, (int)gcolor2, 0));
+            }
+           
+            
+        }
+
         public static void setSmiteSlot()
         {
             foreach (var spell in ObjectManager.Player.SummonerSpellbook.Spells.Where(spell => String.Equals(spell.Name, "SummonerSmite", StringComparison.CurrentCultureIgnoreCase)))
@@ -199,7 +251,7 @@ namespace meta_Smite
         {
             double result = 0;
             Obj_AI_Hero hero = ObjectManager.Player;
-            if(hero.ChampionName == "Nunu")
+            if (hero.ChampionName == "Nunu")
             {
                 return (250 + (150 * hero.Spellbook.GetSpell(champSpell.Slot).Level));
             }
@@ -317,7 +369,7 @@ namespace meta_Smite
             spellList.Add("Udyr", SpellSlot.R);
             spellList.Add("Fizz", SpellSlot.Q);
 
-            if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
+            if (spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
                 string champ = ObjectManager.Player.ChampionName;
                 SpellSlot slot;
@@ -367,14 +419,14 @@ namespace meta_Smite
         public static void setupCampMenu()
         {
             Config.AddSubMenu(new Menu("Camps", "Camps"));
-            if(Game.MapId == GameMapId.SummonersRift)
+            if (Game.MapId == GameMapId.SummonersRift)
             {
                 Config.SubMenu("Camps").AddItem(new MenuItem("Worm", "Baron Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("Dragon", "Dragon Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("AncientGolem", "Blue Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("LizardElder", "Red Enabled").SetValue(true));
             }
-            if(Game.MapId == GameMapId.TwistedTreeline)
+            if (Game.MapId == GameMapId.TwistedTreeline)
             {
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_Spiderboss", "Vilemaw Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NGolem", "Golem Enabled").SetValue(true));
@@ -387,7 +439,7 @@ namespace meta_Smite
         {
             Int32[] dmgQ = { 50, 80, 110, 140, 170 };
             double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Physical, dmgQ[champSpell.Level - 1] + 0.9 * ObjectManager.Player.FlatPhysicalDamageMod + 0.08 * (target.MaxHealth - target.Health));
-            if(damage > 400)
+            if (damage > 400)
             {
                 return 400;
             }
