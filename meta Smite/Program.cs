@@ -217,7 +217,7 @@ namespace meta_Smite
             }
             if (hero.ChampionName == "Volibear")
             {
-                return (hero.GetSpellDamage(mob, champSpell.Slot));
+                return (((35 + (45 * hero.Spellbook.GetSpell(SpellSlot.W).Level)) + ((hero.MaxHealth - (86 * hero.Level + 440)) * 0.15)) * ((mob.MaxHealth - mob.Health) / mob.MaxHealth + 1));
             }
             if (hero.ChampionName == "Warwick")
             {
