@@ -22,8 +22,6 @@ namespace meta_Smite
         public static Spell champSpell;
         public static bool smiteReady = false;
         public static bool spellReady = false;
-        public static int drawSmite = 0;
-        public static int drawSmiteSpell = 0;
         public static bool hasSpell = false;
         public static Render.Text _textF = new Render.Text("", 0, 0, 24, SharpDX.Color.Goldenrod);
         static void Main(string[] args)
@@ -62,7 +60,8 @@ namespace meta_Smite
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
-
+                    smiteReady = false;
+                    spellReady = false;
                     if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
                         smiteReady = true;
