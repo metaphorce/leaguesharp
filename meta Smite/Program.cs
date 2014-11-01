@@ -7,6 +7,7 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System.Reflection;
 using SharpDX;
+using Color = System.Drawing.Color;
 
 namespace meta_Smite
 {
@@ -40,6 +41,7 @@ namespace meta_Smite
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
+            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Game.PrintChat("Meta Smite by metaphorce Loaded");
         }
@@ -169,6 +171,59 @@ namespace meta_Smite
                         }
                     }
                 }
+            }
+        }
+        
+        
+        
+        public static void Drawing_OnDraw(EventArgs args)
+        {
+            Obj_AI_Base mob1 = GetNearest(ObjectManager.Player.ServerPosition);
+            if (Vector3.Distance(ObjectManager.Player.ServerPosition, mob1.ServerPosition) < 1500 && mob1.IsVisible)
+            {
+                bool smiteR = false;
+                bool spellR = false;
+                    if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
+                    {
+                        smiteR = true;
+                    }
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    {
+                        spellR = true;
+                    }
+                int smited = smiteDamage();
+                int spelld = 0;
+                if (champSpell.IsReady() && spellR)
+                {
+                    spelld = (int) spellDamage2(mob1);
+                }
+
+                Vector2 hpBarPos = mob1.HPBarPosition;
+                hpBarPos.X += 45;
+                hpBarPos.Y += 18;
+                var smitePercent = smited/mob1.MaxHealth;
+                var spellPercent = spelld/mob1.MaxHealth;
+                float smiteXPos = hpBarPos.X + (63*smitePercent);
+                float spellXPos = hpBarPos.X + (63*spellPercent);
+                float spellsmiteXPos = hpBarPos.X + ((63*spellPercent) + (63*smitePercent));
+
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPos, hpBarPos.Y, spellsmiteXPos, hpBarPos.Y + 5, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPos, hpBarPos.Y, spellXPos, hpBarPos.Y + 5, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
             }
         }
 
