@@ -187,7 +187,7 @@ namespace meta_Smite
                     {
                         smiteR = true;
                     }
-                    if (Config.Item("Enabled " + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
                     {
                         spellR = true;
                     }
