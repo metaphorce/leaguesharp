@@ -359,7 +359,7 @@ namespace meta_Smite
             }
             if (hero.ChampionName == "KhaZix")
             {
-                return (hero.GetSpellDamage(mob, champSpell.Slot));
+                return (getKhazixDmg(mob));
             }
             if (hero.ChampionName == "Rammus")
             {
@@ -504,6 +504,22 @@ namespace meta_Smite
         {
             Int32[] dmgQ = { 40, 80, 120, 160, 200 };
             double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Magical, dmgQ[champSpell.Level - 1] + 0.45 * ObjectManager.Player.FlatMagicDamageMod);
+            return damage;
+        }
+
+        public static double getKhazixDmg(Obj_AI_Base target)
+        {
+            List<Obj_AI_Base> allMobs = MinionManager.GetMinions(target.ServerPosition, 500f, MinionTypes.All, MinionTeam.Neutral);
+            Int32[] dmgQ = {70, 95, 120, 145, 170};
+            double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Physical, (dmgQ[champSpell.Level - 1] + (1.2 * ObjectManager.Player.FlatPhysicalDamageMod)));
+            if (allMobs.Count == 1)
+            {
+                if (ObjectManager.Player.HasBuff("khazixqevo", true))
+                {
+                    return (damage * 1.3) + (ObjectManager.Player.Level * 10) + (1.04 * ObjectManager.Player.FlatPhysicalDamageMod);
+                }
+                return damage + (damage*0.3);
+            }
             return damage;
         }
 
