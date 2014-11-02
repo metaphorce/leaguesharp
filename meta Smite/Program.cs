@@ -187,7 +187,7 @@ namespace meta_Smite
                     {
                         smiteR = true;
                     }
-                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    if (Config.Item("Enabled " + ObjectManager.Player.ChampionName).GetValue<bool>())
                     {
                         spellR = true;
                     }
@@ -204,9 +204,19 @@ namespace meta_Smite
                 var smitePercent = smited/mob1.MaxHealth;
                 var spellPercent = spelld/mob1.MaxHealth;
                 float smiteXPos = hpBarPos.X + (63*smitePercent);
+                float smiteXPosBig = hpBarPos.X - 30 + (126*smitePercent);
                 float spellXPos = hpBarPos.X + (63*spellPercent);
+                float spellXPosBig = hpBarPos.X - 30 + (126*spellPercent);
                 float spellsmiteXPos = hpBarPos.X + ((63*spellPercent) + (63*smitePercent));
+                float spellsmiteXPosBig = hpBarPos.X - 30 + ((126 * spellPercent) + (126 * smitePercent));
 
+                if (mob1.BaseSkinName == "LizardElder" ||
+                    mob1.BaseSkinName == "AncientGolem" ||
+                    mob1.BaseSkinName == "GiantWolf" ||
+                    mob1.BaseSkinName == "GreatWraith" ||
+                    mob1.BaseSkinName == "Wraith" ||
+                    mob1.BaseSkinName == "Golem")
+                {
                     if (smiteR && spellR)
                     {
                         Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
@@ -224,6 +234,47 @@ namespace meta_Smite
                         Drawing.DrawLine(spellXPos, hpBarPos.Y, spellXPos, hpBarPos.Y + 5, 2,
                             spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
+                }
+                else if (mob1.BaseSkinName == "Worm")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y, spellsmiteXPosBig, hpBarPos.Y + 5, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y, spellXPosBig, hpBarPos.Y + 5, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+                else if (mob1.BaseSkinName == "Dragon")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y - 5, spellsmiteXPosBig, hpBarPos.Y, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y - 5, spellXPosBig, hpBarPos.Y, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
             }
         }
 
