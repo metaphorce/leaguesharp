@@ -195,7 +195,7 @@ namespace meta_Smite
                 int spelld = 0;
                 if (champSpell.IsReady() && spellR)
                 {
-                    spelld = (int) spellDamage2(mob1);
+                    spelld = (int) spellDamage(mob1);
                 }
 
                 Vector2 hpBarPos = mob1.HPBarPosition;
