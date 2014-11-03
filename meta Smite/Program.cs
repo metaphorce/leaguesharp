@@ -191,11 +191,11 @@ namespace meta_Smite
                     {
                         spellR = true;
                     }
-                int smited = smiteDamage();
-                int spelld = 0;
+                double smited = smiteDamage();
+                double spelld = 0;
                 if (champSpell.IsReady() && spellR)
                 {
-                    spelld = (int) spellDamage(mob1);
+                    spelld = spellDamage(mob1);
                 }
 
                 Vector2 hpBarPos = mob1.HPBarPosition;
