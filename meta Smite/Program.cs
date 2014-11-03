@@ -203,12 +203,12 @@ namespace meta_Smite
                 hpBarPos.Y += 18;
                 var smitePercent = smited/mob1.MaxHealth;
                 var spellPercent = spelld/mob1.MaxHealth;
-                float smiteXPos = hpBarPos.X + (63*smitePercent);
-                float smiteXPosBig = hpBarPos.X - 30 + (126*smitePercent);
-                float spellXPos = hpBarPos.X + (63*spellPercent);
-                float spellXPosBig = hpBarPos.X - 30 + (126*spellPercent);
-                float spellsmiteXPos = hpBarPos.X + ((63*spellPercent) + (63*smitePercent));
-                float spellsmiteXPosBig = hpBarPos.X - 30 + ((126 * spellPercent) + (126 * smitePercent));
+                double smiteXPos = hpBarPos.X + (63*smitePercent);
+                double smiteXPosBig = hpBarPos.X - 30 + (126 * smitePercent);
+                double spellXPos = hpBarPos.X + (63 * spellPercent);
+                double spellXPosBig = hpBarPos.X - 30 + (126 * spellPercent);
+                double spellsmiteXPos = hpBarPos.X + ((63 * spellPercent) + (63 * smitePercent));
+                double spellsmiteXPosBig = hpBarPos.X - 30 + ((126 * spellPercent) + (126 * smitePercent));
 
                 if (mob1.BaseSkinName == "LizardElder" ||
                     mob1.BaseSkinName == "AncientGolem" ||
@@ -219,19 +219,19 @@ namespace meta_Smite
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)smiteXPos, hpBarPos.Y, (float)smiteXPos, (float)hpBarPos.Y + 5, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine(spellsmiteXPos, hpBarPos.Y, spellsmiteXPos, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)spellsmiteXPos, hpBarPos.Y, (float)spellsmiteXPos, (float)hpBarPos.Y + 5, 2,
                             (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)smiteXPos, hpBarPos.Y, (float)smiteXPos, hpBarPos.Y + 5, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine(spellXPos, hpBarPos.Y, spellXPos, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)spellXPos, hpBarPos.Y, (float)spellXPos, hpBarPos.Y + 5, 2,
                             spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
@@ -239,19 +239,19 @@ namespace meta_Smite
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y, (float)smiteXPosBig, hpBarPos.Y + 5, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y, spellsmiteXPosBig, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)spellsmiteXPosBig, hpBarPos.Y, (float)spellsmiteXPosBig, hpBarPos.Y + 5, 2,
                             (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y, (float)smiteXPosBig, hpBarPos.Y + 5, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y, spellXPosBig, hpBarPos.Y + 5, 2,
+                        Drawing.DrawLine((float)spellXPosBig, hpBarPos.Y, (float)spellXPosBig, hpBarPos.Y + 5, 2,
                             spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
@@ -259,19 +259,19 @@ namespace meta_Smite
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y - 5, (float)smiteXPosBig, hpBarPos.Y, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y - 5, spellsmiteXPosBig, hpBarPos.Y, 2,
+                        Drawing.DrawLine((float)spellsmiteXPosBig, hpBarPos.Y - 5, (float)spellsmiteXPosBig, hpBarPos.Y, 2,
                             (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y - 5, (float)smiteXPosBig, hpBarPos.Y, 2,
                             smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y - 5, spellXPosBig, hpBarPos.Y, 2,
+                        Drawing.DrawLine((float)spellXPosBig, hpBarPos.Y - 5, (float)spellXPosBig, hpBarPos.Y, 2,
                             spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
