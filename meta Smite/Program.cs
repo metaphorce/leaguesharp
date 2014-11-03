@@ -29,17 +29,17 @@ namespace meta_Smite
         {
             Game.PrintChat("Starting load of Meta Smite");
             setSmiteSlot();
-            champSpell = addSupportedChampSkill();
-            if(smiteSlot == SpellSlot.Unknown && champSpell.Slot == SpellSlot.Unknown)
-            {
-                Game.PrintChat("Smite and spell not found, disabling Meta Smite");
-                return;
-            }
             Config = new Menu("metaSmite", "metaSmite", true);
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
             //Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
             Config.AddToMainMenu();
+            champSpell = addSupportedChampSkill();
+            if (smiteSlot == SpellSlot.Unknown && champSpell.Slot == SpellSlot.Unknown)
+            {
+                Game.PrintChat("Smite and spell not found, disabling Meta Smite");
+                return;
+            }
             setupCampMenu();
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -183,14 +183,14 @@ namespace meta_Smite
             {
                 bool smiteR = false;
                 bool spellR = false;
-                    if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
-                    {
-                        smiteR = true;
-                    }
-                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
-                    {
-                        spellR = true;
-                    }
+                if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
+                {
+                    smiteR = true;
+                }
+                if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                {
+                    spellR = true;
+                }
                 double smited = smiteDamage();
                 double spelld = 0;
                 if (champSpell.IsReady() && spellR)
