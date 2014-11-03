@@ -7,6 +7,7 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System.Reflection;
 using SharpDX;
+using Color = System.Drawing.Color;
 
 namespace meta_Smite
 {
@@ -40,6 +41,7 @@ namespace meta_Smite
             champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
+            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Game.PrintChat("Meta Smite by metaphorce Loaded");
         }
@@ -171,6 +173,110 @@ namespace meta_Smite
                 }
             }
         }
+        
+        
+        
+        public static void Drawing_OnDraw(EventArgs args)
+        {
+            Obj_AI_Base mob1 = GetNearest(ObjectManager.Player.ServerPosition);
+            if (Vector3.Distance(ObjectManager.Player.ServerPosition, mob1.ServerPosition) < 1500 && mob1.IsVisible)
+            {
+                bool smiteR = false;
+                bool spellR = false;
+                    if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
+                    {
+                        smiteR = true;
+                    }
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>())
+                    {
+                        spellR = true;
+                    }
+                int smited = smiteDamage();
+                int spelld = 0;
+                if (champSpell.IsReady() && spellR)
+                {
+                    spelld = (int) spellDamage2(mob1);
+                }
+
+                Vector2 hpBarPos = mob1.HPBarPosition;
+                hpBarPos.X += 45;
+                hpBarPos.Y += 18;
+                var smitePercent = smited/mob1.MaxHealth;
+                var spellPercent = spelld/mob1.MaxHealth;
+                float smiteXPos = hpBarPos.X + (63*smitePercent);
+                float smiteXPosBig = hpBarPos.X - 30 + (126*smitePercent);
+                float spellXPos = hpBarPos.X + (63*spellPercent);
+                float spellXPosBig = hpBarPos.X - 30 + (126*spellPercent);
+                float spellsmiteXPos = hpBarPos.X + ((63*spellPercent) + (63*smitePercent));
+                float spellsmiteXPosBig = hpBarPos.X - 30 + ((126 * spellPercent) + (126 * smitePercent));
+
+                if (mob1.BaseSkinName == "LizardElder" ||
+                    mob1.BaseSkinName == "AncientGolem" ||
+                    mob1.BaseSkinName == "GiantWolf" ||
+                    mob1.BaseSkinName == "GreatWraith" ||
+                    mob1.BaseSkinName == "Wraith" ||
+                    mob1.BaseSkinName == "Golem")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPos, hpBarPos.Y, spellsmiteXPos, hpBarPos.Y + 5, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPos, hpBarPos.Y, smiteXPos, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPos, hpBarPos.Y, spellXPos, hpBarPos.Y + 5, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+                else if (mob1.BaseSkinName == "Worm")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y, spellsmiteXPosBig, hpBarPos.Y + 5, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y, smiteXPosBig, hpBarPos.Y + 5, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y, spellXPosBig, hpBarPos.Y + 5, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+                else if (mob1.BaseSkinName == "Dragon")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine(spellsmiteXPosBig, hpBarPos.Y - 5, spellsmiteXPosBig, hpBarPos.Y, 2,
+                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine(smiteXPosBig, hpBarPos.Y - 5, smiteXPosBig, hpBarPos.Y, 2,
+                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine(spellXPosBig, hpBarPos.Y - 5, spellXPosBig, hpBarPos.Y, 2,
+                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+            }
+        }
 
         public static void setSmiteSlot()
         {
@@ -253,7 +359,7 @@ namespace meta_Smite
             }
             if (hero.ChampionName == "KhaZix")
             {
-                return (hero.GetSpellDamage(mob, champSpell.Slot));
+                return (getKhazixDmg(mob));
             }
             if (hero.ChampionName == "Rammus")
             {
@@ -398,6 +504,22 @@ namespace meta_Smite
         {
             Int32[] dmgQ = { 40, 80, 120, 160, 200 };
             double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Magical, dmgQ[champSpell.Level - 1] + 0.45 * ObjectManager.Player.FlatMagicDamageMod);
+            return damage;
+        }
+
+        public static double getKhazixDmg(Obj_AI_Base target)
+        {
+            List<Obj_AI_Base> allMobs = MinionManager.GetMinions(target.ServerPosition, 500f, MinionTypes.All, MinionTeam.Neutral);
+            Int32[] dmgQ = {70, 95, 120, 145, 170};
+            double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Physical, (dmgQ[champSpell.Level - 1] + (1.2 * ObjectManager.Player.FlatPhysicalDamageMod)));
+            if (allMobs.Count == 1)
+            {
+                if (ObjectManager.Player.HasBuff("khazixqevo", true))
+                {
+                    return (damage * 1.3) + (ObjectManager.Player.Level * 10) + (1.04 * ObjectManager.Player.FlatPhysicalDamageMod);
+                }
+                return damage + (damage*0.3);
+            }
             return damage;
         }
 
