@@ -29,16 +29,16 @@ namespace meta_Smite
         {
             Game.PrintChat("Starting load of Meta Smite");
             setSmiteSlot();
-            if(smiteSlot == SpellSlot.Unknown)
+            champSpell = addSupportedChampSkill();
+            if(smiteSlot == SpellSlot.Unknown && champSpell.Slot == SpellSlot.Unknown)
             {
-                Game.PrintChat("Smite not found, disabling Meta Smite");
+                Game.PrintChat("Smite and spell not found, disabling Meta Smite");
                 return;
             }
             Config = new Menu("metaSmite", "metaSmite", true);
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
             //Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
-            champSpell = addSupportedChampSkill();
             Config.AddToMainMenu();
             setupCampMenu();
             Drawing.OnDraw += Drawing_OnDraw;
