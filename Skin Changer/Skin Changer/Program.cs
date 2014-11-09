@@ -121,7 +121,7 @@ namespace Skin_Changer
             numSkins.Add("Sivir", 6);
             numSkins.Add("Skarner", 2);
             numSkins.Add("Sona", 5);
-            numSkins.Add("Soraka", 3);
+            numSkins.Add("Soraka", 4);
             numSkins.Add("Swain", 3);
             numSkins.Add("Syndra", 2);
             numSkins.Add("Talon", 3);
