@@ -487,6 +487,13 @@ namespace meta_Smite
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
             }
+            if (Game.MapId == (GameMapId) 11)
+            {
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
+            }
         }
 
         public static double getQ2Dmg(Obj_AI_Base target)
@@ -526,7 +533,7 @@ namespace meta_Smite
         //Credits to Lizzaran
         private static readonly string[] MinionNames =
         {
-            "Worm", "Dragon", "LizardElder", "AncientGolem", "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith"
+            "Worm", "Dragon", "LizardElder", "AncientGolem", "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith", "SRU_Baron", "SRU_Dragon", "SRU_Red", "SRU_Blue"
         };
 
         public static Obj_AI_Minion GetNearest(Vector3 pos)
