@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -487,6 +487,14 @@ namespace meta_Smite
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
             }
+			//by SKO
+			if (Game.MapId == (GameMapId)11)
+			{
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled New SR").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled New SR").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled New SR").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled New SR").SetValue(true));
+			}
         }
 
         public static double getQ2Dmg(Obj_AI_Base target)
@@ -526,14 +534,15 @@ namespace meta_Smite
         //Credits to Lizzaran
         private static readonly string[] MinionNames =
         {
-            "Worm", "Dragon", "LizardElder", "AncientGolem", "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith"
+            "Worm", "Dragon", "LizardElder", "AncientGolem", "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron" //by SKO
         };
 
         public static Obj_AI_Minion GetNearest(Vector3 pos)
         {
             var minions =
                 ObjectManager.Get<Obj_AI_Minion>()
-                    .Where(minion => minion.IsValid && MinionNames.Any(name => minion.Name.StartsWith(name)));
+                    .Where(minion => minion.IsValid && MinionNames.Any(name => minion.Name.StartsWith(name)) && !MinionNames.Any(name => minion.Name.Contains("Mini")));
             var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
             Obj_AI_Minion sMinion = objAiMinions.FirstOrDefault();
             double? nearest = null;
