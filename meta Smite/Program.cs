@@ -53,7 +53,7 @@ namespace meta_Smite
                 bool smiteReady = false;
                 bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                Game.PrintChat("Mob is: " + mob.Name);
+                //Game.PrintChat("Mob is: " + mob.Name);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
