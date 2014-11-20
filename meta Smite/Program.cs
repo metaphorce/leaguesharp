@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,6 +53,7 @@ namespace meta_Smite
                 bool smiteReady = false;
                 bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
+                Game.PrintChat("Mob is: " + mob.Name);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
@@ -473,13 +474,6 @@ namespace meta_Smite
         public static void setupCampMenu()
         {
             Config.AddSubMenu(new Menu("Camps", "Camps"));
-            if(Game.MapId == GameMapId.SummonersRift)
-            {
-                Config.SubMenu("Camps").AddItem(new MenuItem("Worm", "Baron Enabled").SetValue(true));
-                Config.SubMenu("Camps").AddItem(new MenuItem("Dragon", "Dragon Enabled").SetValue(true));
-                Config.SubMenu("Camps").AddItem(new MenuItem("AncientGolem", "Blue Enabled").SetValue(true));
-                Config.SubMenu("Camps").AddItem(new MenuItem("LizardElder", "Red Enabled").SetValue(true));
-            }
             if(Game.MapId == GameMapId.TwistedTreeline)
             {
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_Spiderboss", "Vilemaw Enabled").SetValue(true));
@@ -490,10 +484,14 @@ namespace meta_Smite
 			//by SKO
 			if (Game.MapId == (GameMapId)11)
 			{
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled New SR").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled New SR").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled New SR").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled New SR").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Gromp", "Gromp Enabled").SetValue(false));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Murkwolf", "Murkwolf Enabled").SetValue(false));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Krug", "Krug Enabled").SetValue(false));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Razorbeak", "Razorbeak Enabled").SetValue(false));
 			}
         }
 
@@ -531,11 +529,11 @@ namespace meta_Smite
             return damage;
         }
 
-        //Credits to Lizzaran
+        //Credits to Lizzaran & SKO
         private static readonly string[] MinionNames =
         {
-            "Worm", "Dragon", "LizardElder", "AncientGolem", "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
-            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron" //by SKO
+            "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron"
         };
 
         public static Obj_AI_Minion GetNearest(Vector3 pos)
