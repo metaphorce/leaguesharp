@@ -68,29 +68,7 @@ namespace meta_Smite
 
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
-                        if (false) //Config.Item("SmiteCast").GetValue<bool>())
-                        {
-                            Game.PrintChat("Casting with packets, slot is: " + smite.Slot);
-                            var pslot = 0;
-                            if(smite.Slot == SpellSlot.Q)
-                            {
-                                pslot = 64; //Credits to Lizzaren and Trees
-                            }
-                            if(smite.Slot == SpellSlot.W)
-                            {
-                                pslot = 65; //Credits to Lizzaren and Trees
-                            }
-
-                            if(pslot != 0)
-                            {
-                                Game.PrintChat("Casting smite");
-                                Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(mob.NetworkId, (SpellSlot)pslot)).Send(PacketChannel.C2S);
-                            }
-                        }
-                        else
-                        {
-                            ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
-                        }
+                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
                     }
 
                     if (!hasSpell) 
@@ -120,7 +98,8 @@ namespace meta_Smite
                                     ObjectManager.Player.ChampionName == "Rengar" ||
                                     ObjectManager.Player.ChampionName == "Nasus" ||
                                     ObjectManager.Player.ChampionName == "LeeSin" ||
-                                    ObjectManager.Player.ChampionName == "Udyr")
+                                    ObjectManager.Player.ChampionName == "Udyr" ||
+                                    ObjectManager.Player.ChampionName == "Kalista")
                                 {
                                     if (ObjectManager.Player.ChampionName == "LeeSin")
                                     {
@@ -149,7 +128,8 @@ namespace meta_Smite
                                 ObjectManager.Player.ChampionName == "Rengar" ||
                                 ObjectManager.Player.ChampionName == "Nasus" ||
                                 ObjectManager.Player.ChampionName == "LeeSin" ||
-                                ObjectManager.Player.ChampionName == "Udyr")
+                                ObjectManager.Player.ChampionName == "Udyr" ||
+                                ObjectManager.Player.ChampionName == "Kalista")
                             {
                                 if (ObjectManager.Player.ChampionName == "LeeSin")
                                 {
@@ -397,6 +377,14 @@ namespace meta_Smite
             {
                 return (hero.GetSpellDamage(mob, champSpell.Slot));
             }
+            if (hero.ChampionName == "Kalista")
+            {
+                return (getKalistaEDmg(mob));
+            }
+            if(hero.ChampionName == "Irelia")
+            {
+                return (hero.GetSpellDamage(mob, champSpell.Slot));
+            }
             return result;
         }
 
@@ -425,6 +413,8 @@ namespace meta_Smite
             spellList.Add("Veigar", SpellSlot.Q);
             spellList.Add("Udyr", SpellSlot.R);
             spellList.Add("Fizz", SpellSlot.Q);
+            spellList.Add("Kalista", SpellSlot.E);
+            spellList.Add("Irelia", SpellSlot.Q);
 
             if(spellList.ContainsKey(ObjectManager.Player.ChampionName))
             {
@@ -468,6 +458,8 @@ namespace meta_Smite
             rangeList.Add("Veigar", 650f);
             rangeList.Add("Udyr", ObjectManager.Player.AttackRange);
             rangeList.Add("Fizz", 550f);
+            rangeList.Add("Kalista", 950);
+            rangeList.Add("Irelia", 650);
             float res;
             rangeList.TryGetValue(champName, out res);
             return res;
@@ -530,6 +522,19 @@ namespace meta_Smite
                 return damage + (damage*0.3);
             }
             return damage;
+        }
+
+        public static double getKalistaEDmg(Obj_AI_Base t)
+        {
+            var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
+            if (buff != null)
+            {
+                double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
+                double eDmg = damage * 0.60 + new double[] { 0, 20, 30, 40, 50, 60 }[champSpell.Level];
+                damage += buff.Count * (0.004 * damage) + eDmg;
+                return ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
+            }
+            return 0;
         }
 
         //Credits to Lizzaran & SKO
