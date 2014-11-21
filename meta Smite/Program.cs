@@ -53,7 +53,9 @@ namespace meta_Smite
                 bool smiteReady = false;
                 bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                Game.PrintChat("Mob is: " + mob.Name);
+                //Game.PrintChat("Mob about found");
+                //Game.PrintChat("Mob is: " + mob.Name);
+                //testFind(ObjectManager.Player.ServerPosition);
                 if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
@@ -492,6 +494,7 @@ namespace meta_Smite
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Murkwolf", "Murkwolf Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Krug", "Krug Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Razorbeak", "Razorbeak Enabled").SetValue(false));
+                Config.SubMenu("Camps").AddItem(new MenuItem("Sru_Crab", "Crab Enabled").SetValue(false));
 			}
         }
 
@@ -533,9 +536,28 @@ namespace meta_Smite
         private static readonly string[] MinionNames =
         {
             "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
-            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron"
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron", "Sru_Crab"
         };
 
+        public static void testFind(Vector3 pos)
+        {
+            double? nearest = null;
+            var minions =
+                ObjectManager.Get<Obj_AI_Minion>()
+                    .Where(minion => minion.IsValid);
+            var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
+            Obj_AI_Minion sMinion = objAiMinions.FirstOrDefault();
+            foreach (Obj_AI_Minion minion in minions)
+            {
+                double distance = Vector3.Distance(pos, minion.Position);
+                if (nearest == null || nearest > distance)
+                {
+                    nearest = distance;
+                    sMinion = minion;
+                }
+            }
+            Game.PrintChat("Minion name is: " + sMinion.Name);
+        }
         public static Obj_AI_Minion GetNearest(Vector3 pos)
         {
             var minions =
