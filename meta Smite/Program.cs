@@ -184,78 +184,117 @@ namespace meta_Smite
                 Vector2 hpBarPos = mob1.HPBarPosition;
                 hpBarPos.X += 45;
                 hpBarPos.Y += 18;
-                var smitePercent = smited/mob1.MaxHealth;
-                var spellPercent = spelld/mob1.MaxHealth;
-                double smiteXPos = hpBarPos.X + (63*smitePercent);
-                double smiteXPosBig = hpBarPos.X - 30 + (126 * smitePercent);
-                double spellXPos = hpBarPos.X + (63 * spellPercent);
-                double spellXPosBig = hpBarPos.X - 30 + (126 * spellPercent);
-                double spellsmiteXPos = hpBarPos.X + ((63 * spellPercent) + (63 * smitePercent));
-                double spellsmiteXPosBig = hpBarPos.X - 30 + ((126 * spellPercent) + (126 * smitePercent));
+                var smitePercent = smited / mob1.MaxHealth;
+                var spellPercent = spelld / mob1.MaxHealth;
+                double smiteMini = hpBarPos.X + (73 * smitePercent);
+                double spellMini = hpBarPos.X + (73 * spellPercent);
+                double spellsmiteMini = hpBarPos.X + ((73 * spellPercent) + (73 * smitePercent));
 
-                if (mob1.BaseSkinName == "LizardElder" ||
-                    mob1.BaseSkinName == "AncientGolem" ||
-                    mob1.BaseSkinName == "GiantWolf" ||
-                    mob1.BaseSkinName == "GreatWraith" ||
-                    mob1.BaseSkinName == "Wraith" ||
-                    mob1.BaseSkinName == "Golem")
+                double smiteGromp = hpBarPos.X + (85 * smitePercent);
+                double spellGromp = hpBarPos.X + (85 * spellPercent);
+                double spellsmiteGromp = hpBarPos.X + ((85 * spellPercent) + (85 * smitePercent));
+
+                double smiteKrug = hpBarPos.X + (83 * smitePercent);
+                double spellKrug = hpBarPos.X + (83 * spellPercent);
+                double spellsmiteKrug = hpBarPos.X + ((83 * spellPercent) + (83 * smitePercent));
+
+                double smiteBuffs = hpBarPos.X + (143 * smitePercent);
+                double spellBuffs = hpBarPos.X + (143 * spellPercent);
+                double spellsmiteBuffs = hpBarPos.X + ((143 * spellPercent) + (143 * smitePercent));
+
+                double smiteBaron = hpBarPos.X + (194 * smitePercent);
+                double spellBaron = hpBarPos.X + (194 * spellPercent);
+                double spellsmiteBaron = hpBarPos.X + ((194 * spellPercent) + (194 * smitePercent));
+
+                #region DrawRazorbeak/Murwolf
+                if (mob1.BaseSkinName == "SRU_Razorbeak" ||
+                    mob1.BaseSkinName == "SRU_Murkwolf")
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine((float)smiteXPos, hpBarPos.Y, (float)smiteXPos, (float)hpBarPos.Y + 5, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine((float)spellsmiteXPos, hpBarPos.Y, (float)spellsmiteXPos, (float)hpBarPos.Y + 5, 2,
-                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float) (smiteMini - 6), hpBarPos.Y, (float) (smiteMini - 6), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float) (spellsmiteMini - 6), hpBarPos.Y, (float) (spellsmiteMini - 6), hpBarPos.Y + 5, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine((float)smiteXPos, hpBarPos.Y, (float)smiteXPos, hpBarPos.Y + 5, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float) (smiteMini - 6), hpBarPos.Y, (float) (smiteMini - 6), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine((float)spellXPos, hpBarPos.Y, (float)spellXPos, hpBarPos.Y + 5, 2,
-                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                       Drawing.DrawLine((float) (spellMini - 6), hpBarPos.Y, (float) (spellMini - 6), hpBarPos.Y + 5, 2, spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
-                else if (mob1.BaseSkinName == "Worm")
+                #endregion
+                #region DrawGromp
+                else if (mob1.BaseSkinName == "SRU_Gromp")
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y, (float)smiteXPosBig, hpBarPos.Y + 5, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine((float)spellsmiteXPosBig, hpBarPos.Y, (float)spellsmiteXPosBig, hpBarPos.Y + 5, 2,
-                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(smiteGromp - 12), hpBarPos.Y, (float)(smiteGromp - 12), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellsmiteGromp - 12), hpBarPos.Y, (float)(spellsmiteGromp - 12), hpBarPos.Y + 5, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y, (float)smiteXPosBig, hpBarPos.Y + 5, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(smiteGromp - 12), hpBarPos.Y, (float)(smiteGromp - 12), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine((float)spellXPosBig, hpBarPos.Y, (float)spellXPosBig, hpBarPos.Y + 5, 2,
-                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellGromp - 12), hpBarPos.Y, (float)(spellGromp - 12), hpBarPos.Y + 5, 2, spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
-                else if (mob1.BaseSkinName == "Dragon")
+                #endregion
+                #region DrawKrug
+                else if (mob1.BaseSkinName == "SRU_Krug")
                 {
                     if (smiteR && spellR)
                     {
-                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y - 5, (float)smiteXPosBig, hpBarPos.Y, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine((float)spellsmiteXPosBig, hpBarPos.Y - 5, (float)spellsmiteXPosBig, hpBarPos.Y, 2,
-                            (smited + spelld) > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(smiteKrug - 10), hpBarPos.Y, (float)(smiteKrug - 10), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellsmiteKrug - 10), hpBarPos.Y, (float)(spellsmiteKrug - 10), hpBarPos.Y + 5, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
-                        Drawing.DrawLine((float)smiteXPosBig, hpBarPos.Y - 5, (float)smiteXPosBig, hpBarPos.Y, 2,
-                            smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(smiteKrug - 10), hpBarPos.Y, (float)(smiteKrug - 10), hpBarPos.Y + 5, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (spellR)
                     {
-                        Drawing.DrawLine((float)spellXPosBig, hpBarPos.Y - 5, (float)spellXPosBig, hpBarPos.Y, 2,
-                            spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellKrug - 10), hpBarPos.Y, (float)(spellKrug - 10), hpBarPos.Y + 5, 2, spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+                #endregion
+                #region DrawRed/Blue
+                else if (mob1.BaseSkinName == "SRU_Red" ||
+                         mob1.BaseSkinName == "SRU_Blue" ||
+                         mob1.BaseSkinName == "SRU_Dragon")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine((float)(smiteBuffs - 40), hpBarPos.Y, (float)(smiteBuffs - 40), hpBarPos.Y + 12, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellsmiteBuffs - 40), hpBarPos.Y, (float)(spellsmiteBuffs - 40), hpBarPos.Y + 12, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine((float)(smiteBuffs - 40), hpBarPos.Y, (float)(smiteBuffs - 40), hpBarPos.Y + 12, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine((float)(spellBuffs - 40), hpBarPos.Y, (float)(spellBuffs - 40), hpBarPos.Y + 12, 2, spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                }
+                #endregion
+                else if (mob1.BaseSkinName == "SRU_Baron")
+                {
+                    if (smiteR && spellR)
+                    {
+                        Drawing.DrawLine((float)(smiteBaron - 65), hpBarPos.Y, (float)(smiteBaron - 65), hpBarPos.Y + 12, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellsmiteBaron - 65), hpBarPos.Y, (float)(spellsmiteBaron - 65), hpBarPos.Y + 12, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (smiteR)
+                    {
+                        Drawing.DrawLine((float)(smiteBaron - 65), hpBarPos.Y, (float)(smiteBaron - 65), hpBarPos.Y + 12, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                    }
+                    else if (spellR)
+                    {
+                        Drawing.DrawLine((float)(spellBaron - 65), hpBarPos.Y, (float)(spellBaron - 65), hpBarPos.Y + 12, 2, spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                 }
             }
