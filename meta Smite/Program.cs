@@ -507,7 +507,7 @@ namespace meta_Smite
         public static float getRange(string champName)
         {
             rangeList.Add("Chogath", 175f);
-            rangeList.Add("Nunu", 145f);
+            rangeList.Add("Nunu", 175f);
             rangeList.Add("Elise", 475f);
             rangeList.Add("Kayle", 650f);
             rangeList.Add("Lux", 3340f);
