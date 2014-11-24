@@ -83,7 +83,7 @@ namespace meta_Smite
                         spellReady = true;
                     }
 
-                    if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius) //skill is ready 
+                    if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius && !mob.IsDead) //skill is ready 
                     {
                         if (smiteReady)
                         {
