@@ -160,11 +160,11 @@ namespace Skin_Changer
 
             Config = new Menu("SkinChanger", "SkinChanger", true);
             var ChangeSkin = Config.AddItem(new MenuItem("CycleSkins", "CycleSkins!").SetValue(new KeyBind("9".ToCharArray()[0], KeyBindType.Toggle)));
-
+            Config.AddItem(new MenuItem("cChange", "Select champ to change (LftClk)").SetValue(new KeyBind("I".ToCharArray()[0], KeyBindType.Toggle)));
 
             ChangeSkin.ValueChanged += delegate(object sender, OnValueChangeEventArgs EventArgs)
             {
-                if (skinTarget != null)
+                if (skinTarget != null && Config.Item("cChange").GetValue<KeyBind>().Active)
                 {
                     if (numSkins[skinTarget.ChampionName] > tempSkinId)
                         tempSkinId++;
@@ -193,7 +193,7 @@ namespace Skin_Changer
         public static void GenerateSkinPacket(string currentChampion, int skinNumber)
         {
             int netID;
-            if (skinTarget != null)
+            if (skinTarget != null && Config.Item("cChange").GetValue<KeyBind>().Active)
             {
                 netID = skinTarget.NetworkId;
             }
@@ -215,17 +215,27 @@ namespace Skin_Changer
 
         private static void UpdateGame(EventArgs args)
         {
+            //Game.PrintChat("Base skin is: " + ObjectManager.Player.BaseSkinName);
+            //Game.PrintChat("skin is: " + ObjectManager.Player.SkinName);
             if (changedForm == true)
             {
-                GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
+                if(ObjectManager.Player.ChampionName == "Udyr")
+                {
+                    GenerateSkinPacket(ObjectManager.Player.SkinName, currSkinId);
+                }
+                else
+                {
+                    GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
+                }
                 changedForm = false;
             }
         }
 
         private static void Game_OnWndProc(WndEventArgs args)
         {
-            if (args.Msg != (uint)WindowsMessages.WM_LBUTTONDOWN)
+            if (args.Msg != (uint)WindowsMessages.WM_LBUTTONDOWN || !Config.Item("cChange").GetValue<KeyBind>().Active)
             {
+                //Game.PrintChat("Wasn't true: " + Config.Item("cChange").GetValue<KeyBind>().Active);
                 return;
             }
             skinTarget = null;
