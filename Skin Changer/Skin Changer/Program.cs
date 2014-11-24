@@ -16,6 +16,8 @@ namespace Skin_Changer
         public static int currSkinId = 0;
         public static Dictionary<string, int> numSkins = new Dictionary<string, int>();
         public static Menu Config;
+        public static bool changedForm = false;
+        public static int state = 0;
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -165,11 +167,13 @@ namespace Skin_Changer
                     currSkinId++;
                 else
                     currSkinId = 0;
-
-                GenerateSkinPacket(ObjectManager.Player.ChampionName, currSkinId);
+                
+                GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
             };
 
             Config.AddToMainMenu();
+            Game.OnGameProcessPacket += OnGameProcessPacket;
+            Game.OnGameUpdate += UpdateGame;
         }
 
         public static void GenerateSkinPacket(string currentChampion, int skinNumber)
@@ -177,6 +181,23 @@ namespace Skin_Changer
             int netID = ObjectManager.Player.NetworkId;
             GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, currentChampion));
             model.Process(PacketChannel.S2C);
+        }
+
+        private static void OnGameProcessPacket(GamePacketEventArgs args)
+        {
+            if (PacketChannel.S2C == args.Channel && args.PacketData[0] == Packet.S2C.UpdateModel.Header) // Update Packet recieved. 
+            {
+                changedForm = true;
+            }
+        }
+
+        private static void UpdateGame(EventArgs args)
+        {
+            if(changedForm == true)
+            {
+                GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
+                changedForm = false;
+            }
         }
 
     }
