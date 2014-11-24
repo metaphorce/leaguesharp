@@ -1,4 +1,4 @@
-//All Credits to Trelli for 100% of the code
+//Credits to Trelli for base
 
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,11 @@ namespace Skin_Changer
     class Program
     {
         public static int currSkinId = 0;
+        public static int tempSkinId = 0;
         public static Dictionary<string, int> numSkins = new Dictionary<string, int>();
         public static Menu Config;
         public static bool changedForm = false;
-        public static int state = 0;
+        public static Obj_AI_Hero skinTarget = null;
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -78,7 +79,7 @@ namespace Skin_Changer
             numSkins.Add("Karthus", 5);
             numSkins.Add("Kassadin", 4);
             numSkins.Add("Katarina", 7);
-            numSkins.Add("Kayle", 6);
+            numSkins.Add("Kayle", 7);
             numSkins.Add("Kennen", 5);
             numSkins.Add("Khazix", 3);
             numSkins.Add("KogMaw", 8);
@@ -159,27 +160,48 @@ namespace Skin_Changer
 
             Config = new Menu("SkinChanger", "SkinChanger", true);
             var ChangeSkin = Config.AddItem(new MenuItem("CycleSkins", "CycleSkins!").SetValue(new KeyBind("9".ToCharArray()[0], KeyBindType.Toggle)));
-           
-            
+
+
             ChangeSkin.ValueChanged += delegate(object sender, OnValueChangeEventArgs EventArgs)
             {
-                if (numSkins[ObjectManager.Player.ChampionName] > currSkinId)
-                    currSkinId++;
+                if (skinTarget != null)
+                {
+                    if (numSkins[skinTarget.ChampionName] > tempSkinId)
+                        tempSkinId++;
+                    else
+                        tempSkinId = 0;
+
+                    GenerateSkinPacket(skinTarget.ChampionName, tempSkinId);
+                }
                 else
-                    currSkinId = 0;
-                
-                GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
+                {
+                    if (numSkins[ObjectManager.Player.ChampionName] > currSkinId)
+                        currSkinId++;
+                    else
+                        currSkinId = 0;
+
+                    GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
+                }
             };
 
             Config.AddToMainMenu();
             Game.OnGameProcessPacket += OnGameProcessPacket;
             Game.OnGameUpdate += UpdateGame;
+            Game.OnWndProc += Game_OnWndProc;
         }
 
         public static void GenerateSkinPacket(string currentChampion, int skinNumber)
         {
-            int netID = ObjectManager.Player.NetworkId;
-            GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, currentChampion));
+            int netID;
+            if (skinTarget != null)
+            {
+                netID = skinTarget.NetworkId;
+            }
+            else
+            {
+                netID = ObjectManager.Player.NetworkId;
+            }
+            GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(netID, skinNumber, currentChampion));
             model.Process(PacketChannel.S2C);
         }
 
@@ -193,12 +215,30 @@ namespace Skin_Changer
 
         private static void UpdateGame(EventArgs args)
         {
-            if(changedForm == true)
+            if (changedForm == true)
             {
                 GenerateSkinPacket(ObjectManager.Player.BaseSkinName, currSkinId);
                 changedForm = false;
             }
         }
 
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowsMessages.WM_LBUTTONDOWN)
+            {
+                return;
+            }
+            skinTarget = null;
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                if (SharpDX.Vector2.Distance(Game.CursorPos.To2D(), hero.ServerPosition.To2D()) < 300 && !hero.IsMe)
+                {
+                    Game.PrintChat(hero.ChampionName + " selected. You may now cycle their skin!");
+                    skinTarget = hero;
+                    tempSkinId = 0; //reset for each new champ selected
+                    return;
+                }
+            }
+        }
     }
 }
