@@ -78,7 +78,7 @@ namespace Skin_Changer
             numSkins.Add("Karthus", 5);
             numSkins.Add("Kassadin", 4);
             numSkins.Add("Katarina", 7);
-            numSkins.Add("Kayle", 6);
+            numSkins.Add("Kayle", 7);
             numSkins.Add("Kennen", 5);
             numSkins.Add("Khazix", 3);
             numSkins.Add("KogMaw", 8);
