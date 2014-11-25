@@ -296,7 +296,7 @@ namespace meta_Smite
                     }
                 }
                 #endregion
-                else if (mob1.BaseSkinName == "SRU_Baron")
+                else if (mob1.BaseSkinName == "SRU_BaronSpawn")
                 {
                     if (smiteR && spellR)
                     {
