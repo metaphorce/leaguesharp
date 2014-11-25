@@ -562,7 +562,7 @@ namespace meta_Smite
 			if (Game.MapId == (GameMapId)11)
 			{
                 //start by SKO
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled").SetValue(true));
+				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_BaronSpawn", "Baron Enabled").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
@@ -626,7 +626,7 @@ namespace meta_Smite
         private static readonly string[] MinionNames =
         {
             "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
-            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_Baron", "Sru_Crab"
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_BaronSpawn", "Sru_Crab"
         };
 
         public static void testFind(Vector3 pos)
