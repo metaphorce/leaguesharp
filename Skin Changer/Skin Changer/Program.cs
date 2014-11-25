@@ -209,7 +209,11 @@ namespace Skin_Changer
         {
             if (PacketChannel.S2C == args.Channel && args.PacketData[0] == Packet.S2C.UpdateModel.Header) // Update Packet recieved. 
             {
-                changedForm = true;
+                var decoded = Packet.S2C.UpdateModel.Decoded(args.PacketData);
+                if(decoded.NetworkId == ObjectManager.Player.NetworkId)
+                {
+                    changedForm = true;
+                }
             }
         }
 
