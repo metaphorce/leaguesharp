@@ -91,6 +91,15 @@ namespace meta_Smite
                             //Game.PrintChat("Mob health is: " + mob.Health + ", damage is: " + (smitedamage + spelldamage));
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
+                            	if (ObjectManager.Player.ChampionName == "Kalista")
+                                {
+                                    if (getKalistaEDmg(mob) >= smiteDamage())
+                                    {
+                                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                                        champSpell.Cast();
+                                    }
+                                    else champSpell.Cast();
+                                }
                                 if(ObjectManager.Player.ChampionName == "Lux")
                                 {
                                     champSpell.Cast(mob.ServerPosition);
