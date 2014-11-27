@@ -55,10 +55,8 @@ namespace meta_Smite
                 bool smiteReady = false;
                 bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                //Game.PrintChat("Mob about found");
-                //Game.PrintChat("Mob is: " + mob.Name);
                 //testFind(ObjectManager.Player.ServerPosition);
-                if (mob != null && Config.Item(mob.SkinName).GetValue<bool>())
+                if (mob != null && Config.Item(mob.BaseSkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
@@ -83,8 +81,7 @@ namespace meta_Smite
                     {
                         spellReady = true;
                     }
-
-                    if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range + mob.BoundingRadius && !mob.IsDead) //skill is ready 
+                    if (champSpell.IsReady() && spellReady && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < champSpell.Range && !mob.IsDead) //skill is ready 
                     {
                         if (smiteReady)
                         {
@@ -301,7 +298,7 @@ namespace meta_Smite
                     if (smiteR && spellR)
                     {
                         Drawing.DrawLine((float)(smiteBaron - 65), hpBarPos.Y, (float)(smiteBaron - 65), hpBarPos.Y + 12, 2, smited > mob1.Health ? Color.SpringGreen : Color.SeaShell);
-                        Drawing.DrawLine((float)(spellsmiteBaron - 65), hpBarPos.Y, (float)(spellsmiteBaron - 65), hpBarPos.Y + 12, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
+                        Drawing.DrawLine((float)(spellsmiteBaron-65), hpBarPos.Y, (float)(spellsmiteBaron - 65), hpBarPos.Y + 12, 2, smited + spelld > mob1.Health ? Color.SpringGreen : Color.SeaShell);
                     }
                     else if (smiteR)
                     {
