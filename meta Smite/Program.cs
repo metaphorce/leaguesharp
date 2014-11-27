@@ -110,8 +110,7 @@ namespace meta_Smite
                                     ObjectManager.Player.ChampionName == "Rengar" ||
                                     ObjectManager.Player.ChampionName == "Nasus" ||
                                     ObjectManager.Player.ChampionName == "LeeSin" ||
-                                    ObjectManager.Player.ChampionName == "Udyr" ||
-                                    ObjectManager.Player.ChampionName == "Kalista")
+                                    ObjectManager.Player.ChampionName == "Udyr")
                                 {
                                     if (ObjectManager.Player.ChampionName == "LeeSin")
                                     {
