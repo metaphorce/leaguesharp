@@ -555,21 +555,20 @@ namespace meta_Smite
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
                 Config.SubMenu("Camps").AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
             }
-			if (Game.MapId == (GameMapId)11)
-			{
+	    if (Game.MapId == (GameMapId)11)
+	    {
                 //start by SKO
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_BaronSpawn", "Baron Enabled").SetValue(true));
-                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron TEST ENABLED").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
-				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
+		Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron Enabled").SetValue(true));
+		Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
+		Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
+		Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
                 //end
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Gromp", "Gromp Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Murkwolf", "Murkwolf Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Krug", "Krug Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Razorbeak", "Razorbeak Enabled").SetValue(false));
                 Config.SubMenu("Camps").AddItem(new MenuItem("Sru_Crab", "Crab Enabled").SetValue(false));
-			}
+	    }
         }
 
         public static double getQ2Dmg(Obj_AI_Base target)
@@ -623,7 +622,7 @@ namespace meta_Smite
         private static readonly string[] MinionNames =
         {
             "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
-            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_BaronSpawn", "Sru_Crab", "SRU_Baron"
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "Sru_Crab", "SRU_Baron"
         };
 
         public static void testFind(Vector3 pos)
