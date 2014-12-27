@@ -55,13 +55,12 @@ namespace meta_Smite
                 bool smiteReady = false;
                 bool spellReady = false;
                 Obj_AI_Base mob = GetNearest(ObjectManager.Player.ServerPosition);
-                //testFind(ObjectManager.Player.ServerPosition);
                 if (mob != null && Config.Item(mob.BaseSkinName).GetValue<bool>())
                 {
                     double smitedamage = smiteDamage();
                     double spelldamage = spellDamage(mob);
 
-                    if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
+                    if (ObjectManager.Player.Spellbook.CanUseSpell(smiteSlot) == SpellState.Ready && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) < smite.Range)
                     {
                         smiteReady = true;
                     }
@@ -69,7 +68,8 @@ namespace meta_Smite
                     if (smiteReady && mob.Health < smitedamage) //Smite is ready and enemy is killable with smite
                     {
                         setSmiteSlot();
-                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                        smite.Slot = smiteSlot;
+                        ObjectManager.Player.Spellbook.CastSpell(smiteSlot, mob);
                     }
 
                     if (!hasSpell) 
@@ -85,7 +85,6 @@ namespace meta_Smite
                     {
                         if (smiteReady)
                         {
-                            //Game.PrintChat("Mob health is: " + mob.Health + ", damage is: " + (smitedamage + spelldamage));
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
                                 if(ObjectManager.Player.ChampionName == "Lux")
@@ -178,7 +177,7 @@ namespace meta_Smite
             {
                 bool smiteR = false;
                 bool spellR = false;
-                if (ObjectManager.Player.SummonerSpellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
+                if (ObjectManager.Player.Spellbook.CanUseSpell(smiteSlot) == SpellState.Ready)
                 {
                     smiteR = true;
                 }
@@ -293,7 +292,7 @@ namespace meta_Smite
                     }
                 }
                 #endregion
-                else if (mob1.BaseSkinName == "SRU_BaronSpawn")
+                else if (mob1.BaseSkinName == "SRU_Baron")
                 {
                     if (smiteR && spellR)
                     {
@@ -344,7 +343,7 @@ namespace meta_Smite
 
         public static void setSmiteSlot()
         {
-            foreach (var spell in ObjectManager.Player.SummonerSpellbook.Spells.Where(spell => String.Equals(spell.Name, smitetype(), StringComparison.CurrentCultureIgnoreCase)))
+            foreach (var spell in ObjectManager.Player.Spellbook.Spells.Where(spell => String.Equals(spell.Name, smitetype(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 smiteSlot = spell.Slot;
                 smite = new Spell(smiteSlot, 700);
@@ -560,6 +559,7 @@ namespace meta_Smite
 			{
                 //start by SKO
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_BaronSpawn", "Baron Enabled").SetValue(true));
+                Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Baron", "Baron TEST ENABLED").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Dragon", "Dragon Enabled").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Blue", "Blue Enabled").SetValue(true));
 				Config.SubMenu("Camps").AddItem(new MenuItem("SRU_Red", "Red Enabled").SetValue(true));
@@ -623,7 +623,7 @@ namespace meta_Smite
         private static readonly string[] MinionNames =
         {
             "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith",
-            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_BaronSpawn", "Sru_Crab"
+            "SRU_Blue", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak", "SRU_Red", "SRU_Krug", "SRU_Dragon", "SRU_BaronSpawn", "Sru_Crab", "SRU_Baron"
         };
 
         public static void testFind(Vector3 pos)
@@ -649,7 +649,7 @@ namespace meta_Smite
         {
             var minions =
                 ObjectManager.Get<Obj_AI_Minion>()
-                    .Where(minion => minion.IsValid && MinionNames.Any(name => minion.Name.StartsWith(name)) && !MinionNames.Any(name => minion.Name.Contains("Mini")));
+                    .Where(minion => minion.IsValid && MinionNames.Any(name => minion.Name.StartsWith(name)) && !MinionNames.Any(name => minion.Name.Contains("Mini")) && !MinionNames.Any(name => minion.Name.Contains("Spawn")));
             var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
             Obj_AI_Minion sMinion = objAiMinions.FirstOrDefault();
             double? nearest = null;
