@@ -34,6 +34,7 @@ namespace meta_Smite
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
             Config.AddItem(new MenuItem("DrawStatus", "Show Status!").SetValue(true));
+            Config.AddItem(new MenuItem("RangeDraw", "Range When Enabled").SetValue(true));
             //Config.AddItem(new MenuItem("SmiteCast", "Cast smite using packet")).SetValue(true);
             Config.AddToMainMenu();
             champSpell = addSupportedChampSkill();
@@ -154,6 +155,25 @@ namespace meta_Smite
                     }
                 }
             }
+            //var drawStatus = Config.Item("DrawStatus").GetValue<bool>();
+            //if (drawStatus)
+            //{
+            //    if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
+            //    {
+            //        Drawing.DrawText(ObjectManager.Player.HPBarPosition.X + 10, ObjectManager.Player.HPBarPosition.Y + 36, Color.Gold, "Smite Enabled!");
+            //    }
+            //    else
+            //    {
+            //        Drawing.DrawText(ObjectManager.Player.HPBarPosition.X + 10, ObjectManager.Player.HPBarPosition.Y + 36, Color.Red, "Smite Disabled!");
+            //    }
+            //}
+        }
+        
+        
+        
+        public static void Drawing_OnDraw(EventArgs args)
+        {
+
             var drawStatus = Config.Item("DrawStatus").GetValue<bool>();
             if (drawStatus)
             {
@@ -166,12 +186,16 @@ namespace meta_Smite
                     Drawing.DrawText(ObjectManager.Player.HPBarPosition.X + 10, ObjectManager.Player.HPBarPosition.Y + 36, Color.Red, "Smite Disabled!");
                 }
             }
-        }
-        
-        
-        
-        public static void Drawing_OnDraw(EventArgs args)
-        {
+
+            var rangeDrawStatus = Config.Item("RangeDraw").GetValue<bool>(); 
+            if(rangeDrawStatus)
+            {
+                if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
+                {
+                    Drawing.DrawCircle(ObjectManager.Player.Position, 760f, Color.Red);
+                }
+            }
+
             Obj_AI_Base mob1 = GetNearest(ObjectManager.Player.ServerPosition);
             if (Vector3.Distance(ObjectManager.Player.ServerPosition, mob1.ServerPosition) < 1500 && mob1.IsVisible)
             {
