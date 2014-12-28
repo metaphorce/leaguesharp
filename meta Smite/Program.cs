@@ -155,18 +155,6 @@ namespace meta_Smite
                     }
                 }
             }
-            //var drawStatus = Config.Item("DrawStatus").GetValue<bool>();
-            //if (drawStatus)
-            //{
-            //    if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
-            //    {
-            //        Drawing.DrawText(ObjectManager.Player.HPBarPosition.X + 10, ObjectManager.Player.HPBarPosition.Y + 36, Color.Gold, "Smite Enabled!");
-            //    }
-            //    else
-            //    {
-            //        Drawing.DrawText(ObjectManager.Player.HPBarPosition.X + 10, ObjectManager.Player.HPBarPosition.Y + 36, Color.Red, "Smite Disabled!");
-            //    }
-            //}
         }
         
         
