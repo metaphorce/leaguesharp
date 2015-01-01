@@ -332,19 +332,19 @@ namespace meta_Smite
 
         public static string smitetype()
         {
-            if (SmiteBlue.Any(Items.HasItem))
+            if (SmiteBlue.Any(id => Items.HasItem(id)))
             {
                 return "s5_summonersmiteplayerganker";
             }
-            if (SmiteRed.Any(Items.HasItem))
+            if (SmiteRed.Any(id => Items.HasItem(id)))
             {
                 return "s5_summonersmiteduel";
             }
-            if (SmiteGrey.Any(Items.HasItem))
+            if (SmiteGrey.Any(id => Items.HasItem(id)))
             {
                 return "s5_summonersmitequick";
             }
-            if (SmitePurple.Any(Items.HasItem))
+            if (SmitePurple.Any(id => Items.HasItem(id)))
             {
                 return "itemsmiteaoe";
             }
