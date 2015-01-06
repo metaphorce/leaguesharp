@@ -88,6 +88,15 @@ namespace meta_Smite
                         {
                             if (mob.Health < smitedamage + spelldamage) //Smite is ready and combined damage will kill
                             {
+                            	if (ObjectManager.Player.ChampionName == "Kalista")
+                                {
+                                    if (getKalistaEDmg(mob) >= smiteDamage())
+                                    {
+                                        ObjectManager.Player.SummonerSpellbook.CastSpell(smiteSlot, mob);
+                                        champSpell.Cast();
+                                    }
+                                    else champSpell.Cast();
+                                }
                                 if(ObjectManager.Player.ChampionName == "Lux")
                                 {
                                     champSpell.Cast(mob.ServerPosition);
@@ -98,8 +107,7 @@ namespace meta_Smite
                                     ObjectManager.Player.ChampionName == "Rengar" ||
                                     ObjectManager.Player.ChampionName == "Nasus" ||
                                     ObjectManager.Player.ChampionName == "LeeSin" ||
-                                    ObjectManager.Player.ChampionName == "Udyr" ||
-                                    ObjectManager.Player.ChampionName == "Kalista")
+                                    ObjectManager.Player.ChampionName == "Udyr")
                                 {
                                     if (ObjectManager.Player.ChampionName == "LeeSin")
                                     {
