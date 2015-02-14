@@ -53,7 +53,7 @@ namespace MetaSmite.Champions
         public static float GetRendDamage(Obj_AI_Base target, int customStacks = -1)
         {
             // Calculate the damage and return
-            return (float)MetaSmite.Player.CalcDamage(target, Damage.DamageType.Physical, GetRawRendDamage(target, customStacks)) - Config.Item("spellReductionE").GetValue<Slider>().Value;
+            return (float)MetaSmite.Player.CalcDamage(target, Damage.DamageType.Physical, GetRawRendDamage(target, customStacks)) - Config.Item("spellReductionE").GetValue<Slider>().Value * 0.98f;
         }
 
         public static float GetRawRendDamage(Obj_AI_Base target, int customStacks = -1)
