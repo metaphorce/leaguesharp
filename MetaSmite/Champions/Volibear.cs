@@ -1,6 +1,7 @@
 ﻿using System;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 
 namespace MetaSmite.Champions
 {

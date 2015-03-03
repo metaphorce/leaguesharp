@@ -58,9 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Champions\Amumu.cs" />
     <Compile Include="Champions\Chogath.cs" />
     <Compile Include="Champions\Elise.cs" />
     <Compile Include="Champions\Fizz.cs" />
+    <Compile Include="Champions\Hecarim.cs" />
     <Compile Include="Champions\Irelia.cs" />
     <Compile Include="Champions\Kalista.cs" />
     <Compile Include="Champions\KhaZix.cs" />
