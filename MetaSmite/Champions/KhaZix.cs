@@ -2,6 +2,7 @@
 using LeagueSharp;
 using LeagueSharp.Common;
 using System.Collections.Generic;
+using SharpDX;
 
 namespace MetaSmite.Champions
 {
@@ -28,14 +29,18 @@ namespace MetaSmite.Champions
         {
             if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
-                if (SmiteManager.mob != null && Config.Item(SmiteManager.mob.BaseSkinName).GetValue<bool>())
+                if (SmiteManager.mob != null && Config.Item(SmiteManager.mob.BaseSkinName).GetValue<bool>() && Vector3.Distance(MetaSmite.Player.ServerPosition, SmiteManager.mob.ServerPosition) <= champSpell.Range)
                 {
                     spellDamage = getKhazixDmg(SmiteManager.mob);
                     totalDamage = spellDamage + SmiteManager.damage;
-
                     if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>() &&
-                        MetaSmite.Player.Spellbook.CanUseSpell(SmiteManager.smite.Slot) == SpellState.Ready &&
-                        champSpell.IsReady() && (totalDamage >= SmiteManager.mob.Health || spellDamage >= SmiteManager.mob.Health))
+                        SmiteManager.smite.IsReady() &&
+                        champSpell.IsReady() && totalDamage >= SmiteManager.mob.Health)
+                    {
+                        MetaSmite.Player.Spellbook.CastSpell(champSpell.Slot, SmiteManager.mob);
+                    }
+                    if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>() &&
+                        champSpell.IsReady() && spellDamage >= SmiteManager.mob.Health)
                     {
                         MetaSmite.Player.Spellbook.CastSpell(champSpell.Slot, SmiteManager.mob);
                     }

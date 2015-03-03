@@ -45,11 +45,16 @@ namespace MetaSmite
         private static void OnDraw(EventArgs args)
         {
             var rangeDrawStatus = Config.Item("RangeDraw").GetValue<bool>();
-            if (rangeDrawStatus)
+            var drawStatus = Config.Item("DrawStatus").GetValue<bool>();
+            if (rangeDrawStatus && drawStatus)
             {
                 if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
                 {
-                    Drawing.DrawCircle(ObjectManager.Player.Position, 760f, System.Drawing.Color.Red);
+                    Drawing.DrawCircle(ObjectManager.Player.Position, 570f, System.Drawing.Color.Green);
+                }
+                else
+                {
+                    Drawing.DrawCircle(ObjectManager.Player.Position, 570f, System.Drawing.Color.Red);
                 }
             }
         }

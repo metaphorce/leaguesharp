@@ -3,9 +3,10 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 
+
 namespace MetaSmite.Champions
 {
-    public static class Udyr
+    public static class Hecarim
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
@@ -15,7 +16,7 @@ namespace MetaSmite.Champions
         public static void Load()
         {
             //Load spells
-            champSpell = new Spell(SpellSlot.R, ObjectManager.Player.AttackRange);
+            champSpell = new Spell(SpellSlot.Q, 350f);
 
             //Spell usage.
             Config.AddItem(new MenuItem("Enabled-" + MetaSmite.Player.ChampionName, MetaSmite.Player.ChampionName + "-" + champSpell.Slot)).SetValue(true);
@@ -30,7 +31,7 @@ namespace MetaSmite.Champions
             {
                 if (SmiteManager.mob != null && Config.Item(SmiteManager.mob.BaseSkinName).GetValue<bool>() && Vector3.Distance(MetaSmite.Player.ServerPosition, SmiteManager.mob.ServerPosition) <= champSpell.Range)
                 {
-                    spellDamage = getUdyrR(SmiteManager.mob);
+                    spellDamage = MetaSmite.Player.GetSpellDamage(SmiteManager.mob, champSpell.Slot);
                     totalDamage = spellDamage + SmiteManager.damage;
                     if (Config.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>() &&
                         SmiteManager.smite.IsReady() &&
@@ -45,13 +46,6 @@ namespace MetaSmite.Champions
                     }
                 }
             }
-        }
-
-        public static double getUdyrR(Obj_AI_Base target)
-        {
-            Int32[] dmgQ = { 40, 80, 120, 160, 200 };
-            double damage = ObjectManager.Player.CalcDamage(target, Damage.DamageType.Magical, dmgQ[champSpell.Level - 1] + 0.45 * ObjectManager.Player.FlatMagicDamageMod);
-            return damage;
         }
     }
 }

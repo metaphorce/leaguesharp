@@ -36,7 +36,8 @@ namespace MetaSmite
             //Menu Setup
             Config.AddItem(new MenuItem("Enabled", "Toggle Enabled").SetValue(new KeyBind("N".ToCharArray()[0], KeyBindType.Toggle, true)));
             Config.AddItem(new MenuItem("EnabledH", "Hold Enable").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Press)));
-            Config.AddItem(new MenuItem("RangeDraw", "Draw Range").SetValue(true));
+            Config.AddItem(new MenuItem("RangeDraw", "Draw Range and Status").SetValue(true));
+            Config.AddItem(new MenuItem("DrawStatus", "Drawings off/on!").SetValue(true));
             setupCampMenu();
 
 
@@ -47,13 +48,13 @@ namespace MetaSmite
 
             if (new[] { "s5_summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(Summoner1.Name))
             {
-                smite = new Spell(SpellSlot.Summoner1);
+                smite = new Spell(SpellSlot.Summoner1, 570f);
                 setSmiteDamage();
             }
 
             if (new[] { "s5summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(Summoner2.Name))
             {
-                smite = new Spell(SpellSlot.Summoner2);
+                smite = new Spell(SpellSlot.Summoner2, 570f);
                 setSmiteDamage();
             }
         }
@@ -68,6 +69,7 @@ namespace MetaSmite
             if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
                 mob = GetNearest(ObjectManager.Player.ServerPosition);
+                //Game.PrintChat("Mobname is: " + mob.Name + " range is: " + smite.Range);
                 if (mob != null && Config.Item(mob.BaseSkinName).GetValue<bool>())
                 {
                     if (MetaSmite.Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready && damage >= mob.Health && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) <= smite.Range)
