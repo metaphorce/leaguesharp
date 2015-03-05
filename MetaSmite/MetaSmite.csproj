@@ -71,6 +71,7 @@
     <Compile Include="Champions\MasterYi.cs" />
     <Compile Include="Champions\MonkeyKing.cs" />
     <Compile Include="Champions\Nasus.cs" />
+    <Compile Include="Champions\Nidalee.cs" />
     <Compile Include="Champions\Nunu.cs" />
     <Compile Include="Champions\Olaf.cs" />
     <Compile Include="Champions\Pantheon.cs" />
