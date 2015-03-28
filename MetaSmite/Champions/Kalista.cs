@@ -29,7 +29,7 @@ namespace MetaSmite.Champions
             Config.AddItem(new MenuItem("spellReductionE", "E damage reduction")).SetValue(new Slider(0, 0, 20));
 
             //Events
-            Game.OnGameUpdate += OnGameUpdate;
+            Game.OnUpdate += OnGameUpdate;
         }
 
         private static void OnGameUpdate(EventArgs args)
