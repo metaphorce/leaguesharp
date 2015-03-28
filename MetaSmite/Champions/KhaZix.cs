@@ -22,7 +22,7 @@ namespace MetaSmite.Champions
             Config.AddItem(new MenuItem("Enabled-" + MetaSmite.Player.ChampionName, MetaSmite.Player.ChampionName + "-" + champSpell.Slot)).SetValue(true);
 
             //Events
-            Game.OnGameUpdate += OnGameUpdate;
+            Game.OnUpdate += OnGameUpdate;
         }
 
         private static void OnGameUpdate(EventArgs args)
