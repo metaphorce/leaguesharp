@@ -27,7 +27,7 @@ namespace MetaSmite
 
         static SmiteManager()
         {
-            Game.OnGameUpdate += OnGameUpdate;
+            Game.OnUpdate += OnGameUpdate;
             Drawing.OnDraw += OnDraw;
         }
 
