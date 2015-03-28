@@ -186,7 +186,7 @@ namespace Skin_Changer
 
             Config.AddToMainMenu();
             Game.OnGameProcessPacket += OnGameProcessPacket;
-            Game.OnGameUpdate += UpdateGame;
+            Game.OnUpdate += UpdateGame;
             Game.OnWndProc += Game_OnWndProc;
         }
 
