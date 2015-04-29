@@ -5,14 +5,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class Chogath
+    public class Chogath
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Chogath()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.R, 175f);

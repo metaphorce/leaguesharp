@@ -5,14 +5,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class Twitch
+    public class Twitch
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Twitch()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.E, 1200);

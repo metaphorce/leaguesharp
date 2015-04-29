@@ -1,6 +1,9 @@
 ﻿using System;
 using LeagueSharp;
 using LeagueSharp.Common;
+using LeagueSharp.Common.Data;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace MetaSmite
 {
@@ -15,30 +18,24 @@ namespace MetaSmite
             try
             {
                 Game.PrintChat("MetaSmite Loaded!");
-
                 Player = ObjectManager.Player;
-
                 Config = new Menu("MetaSmite", "MetaSmite", true);
-
                 SmiteManager.Load();
-
-
                 try
                 {
-                    Type.GetType("MetaSmite.Champions." + Player.ChampionName).GetMethod("Load").Invoke(null, null);
+                    Invoker.Invoke("MetaSmite.Champions." + Player.ChampionName);
                 }
-                catch
+                catch(Exception e)
                 {
                     Game.PrintChat(Player.ChampionName + " is not supported. Smite will still work if you have it!");
+                    Console.WriteLine(e);
                 }
-
                 Config.AddToMainMenu();
             }
             catch(Exception e)
             {
                 Console.WriteLine(e);
             }
-
             Drawing.OnDraw += OnDraw;
         }
 
@@ -57,6 +54,28 @@ namespace MetaSmite
                     Drawing.DrawCircle(ObjectManager.Player.Position, 570f, System.Drawing.Color.Red);
                 }
             }
+        }
+    }
+
+    public static class Invoker
+    {
+        public static void Invoke(string typeName)
+        {
+            Type type = Type.GetType(typeName);
+            NewInstance(type);
+        }
+
+        private static void NewInstance(Type type)
+        {
+            var target = type.GetConstructor(Type.EmptyTypes);
+            var dynamic = new DynamicMethod(string.Empty, type, new Type[0], target.DeclaringType);
+            var il = dynamic.GetILGenerator();
+            il.DeclareLocal(target.DeclaringType);
+            il.Emit(OpCodes.Newobj, target);
+            il.Emit(OpCodes.Stloc_0);
+            il.Emit(OpCodes.Ldloc_0);
+            il.Emit(OpCodes.Ret);
+            ((Func<object>)dynamic.CreateDelegate(typeof(Func<object>)))();
         }
     }
 }

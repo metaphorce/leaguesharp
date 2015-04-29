@@ -5,14 +5,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class Nasus
+    public class Nasus
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Nasus()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, ObjectManager.Player.AttackRange);

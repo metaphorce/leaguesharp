@@ -6,14 +6,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class KhaZix
+    public class KhaZix
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public KhaZix()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 325f);

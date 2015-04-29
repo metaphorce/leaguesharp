@@ -5,14 +5,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class MasterYi
+    public class MasterYi
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public MasterYi()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 600f);

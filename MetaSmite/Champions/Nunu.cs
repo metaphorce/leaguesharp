@@ -5,14 +5,14 @@ using LeagueSharp.Common;
 
 namespace MetaSmite.Champions
 {
-    public static class Nunu
+    public class Nunu
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Nunu()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 180f);

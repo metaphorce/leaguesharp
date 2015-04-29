@@ -5,14 +5,14 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class Nidalee
+    public class Nidalee
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Nidalee()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 1500f);

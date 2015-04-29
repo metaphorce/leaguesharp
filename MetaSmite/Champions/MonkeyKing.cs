@@ -4,14 +4,14 @@ using LeagueSharp.Common;
 
 namespace MetaSmite.Champions
 {
-    public static class MonkeyKing
+    public class MonkeyKing
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public MonkeyKing()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 100f);

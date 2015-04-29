@@ -23,6 +23,11 @@ namespace MetaSmite
             "SRU_Red", "SRU_Krug", "SRU_Dragon", "Sru_Crab", "SRU_Baron"
         };
 
+        // Temporary solution (really don't like hardcoding stuff like this)
+        private static readonly int[] SmitePurple = { 3713, 3726, 3725, 3724, 3723 };
+        private static readonly int[] SmiteGrey = { 3711, 3722, 3721, 3720, 3719 };
+        private static readonly int[] SmiteRed = { 3715, 3718, 3717, 3716, 3714 };
+        private static readonly int[] SmiteBlue = { 3706, 3710, 3709, 3708, 3707 };
 
 
         static SmiteManager()
@@ -61,6 +66,7 @@ namespace MetaSmite
 
         private static void OnGameUpdate(EventArgs args)
         {
+            setSmiteSlot();
             if(ObjectManager.Player.Level > Plevel)
             {
                 Plevel = ObjectManager.Player.Level;
@@ -69,7 +75,6 @@ namespace MetaSmite
             if (Config.Item("Enabled").GetValue<KeyBind>().Active || Config.Item("EnabledH").GetValue<KeyBind>().Active)
             {
                 mob = GetNearest(ObjectManager.Player.ServerPosition);
-                //Game.PrintChat("Mobname is: " + mob.Name + " range is: " + smite.Range);
                 if (mob != null && Config.Item(mob.BaseSkinName).GetValue<bool>())
                 {
                     if (MetaSmite.Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready && damage >= mob.Health && Vector3.Distance(ObjectManager.Player.ServerPosition, mob.ServerPosition) <= smite.Range)
@@ -99,6 +104,22 @@ namespace MetaSmite
                 50*level + 100
             };
             damage = smitedamage.Max();
+        }
+
+        public static void setSmiteSlot()
+        {
+            SpellSlot smiteSlot;
+            if (SmiteBlue.Any(x => Items.HasItem(x)))
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmiteplayerganker");
+            else if (SmiteRed.Any(x => Items.HasItem(x)))
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmiteduel");
+            else if (SmiteGrey.Any(x => Items.HasItem(x)))
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmitequick");
+            else if (SmitePurple.Any(x => Items.HasItem(x)))
+                smiteSlot = ObjectManager.Player.GetSpellSlot("itemsmiteaoe");
+            else
+                smiteSlot = ObjectManager.Player.GetSpellSlot("summonersmite");
+            smite.Slot = smiteSlot;
         }
 
         public static Obj_AI_Minion GetNearest(Vector3 pos)
@@ -144,6 +165,5 @@ namespace MetaSmite
                 Config.SubMenu("Camps").AddItem(new MenuItem("Sru_Crab", "Crab Enabled").SetValue(false));
             }
         }
-
     }
 }

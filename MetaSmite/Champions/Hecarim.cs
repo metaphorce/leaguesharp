@@ -6,21 +6,21 @@ using SharpDX;
 
 namespace MetaSmite.Champions
 {
-    public static class Hecarim
+    public class Hecarim
     {
         internal static Spell champSpell;
         private static Menu Config = MetaSmite.Config;
         private static double totalDamage;
         private static double spellDamage;
 
-        public static void Load()
+        public Hecarim()
         {
             //Load spells
             champSpell = new Spell(SpellSlot.Q, 350f);
 
             //Spell usage.
             Config.AddItem(new MenuItem("Enabled-" + MetaSmite.Player.ChampionName, MetaSmite.Player.ChampionName + "-" + champSpell.Slot)).SetValue(true);
-
+            
             //Events
             Game.OnUpdate += OnGameUpdate;
         }
