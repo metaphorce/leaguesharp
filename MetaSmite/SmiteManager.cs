@@ -25,7 +25,7 @@ namespace MetaSmite
 
         // Temporary solution (really don't like hardcoding stuff like this)
         private static readonly int[] SmitePurple = { 3713, 3726, 3725, 3724, 3723, 3933 };
-        private static readonly int[] SmiteGrey = { 3711, 3722, 3721, 3720, 3719, 3930 };
+        private static readonly int[] SmiteGrey = { 3711, 3722, 3721, 3720, 3719, 3932 };
         private static readonly int[] SmiteRed = { 3715, 3718, 3717, 3716, 3714, 3931 };
         private static readonly int[] SmiteBlue = { 3706, 3710, 3709, 3708, 3707, 3930 };
 
